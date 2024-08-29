@@ -1,0 +1,55 @@
+.home {
+  max-width: 100%;
+  padding: 0 20px;
+
+  .swiper-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 30px auto;
+    position: relative;
+  }
+
+  .mySwiper {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .swiper-image {
+    width: 100%;
+    height: auto;
+    max-height: 400px; // Adjust max-height for large screens
+    object-fit: cover; // Maintain image aspect ratio
+  }
+
+  @media (max-width: 1200px) {
+    .swiper-container {
+      max-width: 100%; // Adjust max-width for smaller screens
+    }
+  }
+
+  @media (max-width: 992px) {
+    .swiper-image {
+      max-height: 300px; // Adjust height for tablets
+    }
+  }
+
+  @media (max-width: 768px) {
+    .swiper-image {
+      max-height: 250px; // Adjust height for smaller tablets
+    }
+  }
+
+  @media (max-width: 480px) {
+    .swiper-image {
+      max-height: 200px; // Adjust height for mobile
+    }
+  }
+}

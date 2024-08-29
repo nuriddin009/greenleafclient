@@ -1,0 +1,28 @@
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #6b9a50; /* Scrollbar thumb color */
+    border-radius: 10px; /* Rounded edges of the scrollbar */
+    border: 3px solid #f1f1f1; /* Creates padding around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #55883a; /* Darker green color when hovered */
+}

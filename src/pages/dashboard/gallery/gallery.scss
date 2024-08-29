@@ -1,0 +1,29 @@
+
+.gallery{
+
+  .preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background  
+ */
+    opacity: 0; /* Hide initially */
+    display: flex;
+    justify-content: center; /* Center icons horizontally */
+    align-items: center; /* Center icons vertically */
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .ImageListItem:hover .preview-overlay {
+    opacity: 1; /* Show on hover */
+  }
+
+  /* Style your icon buttons here */
+  .preview-overlay .MuiIconButton-root {
+    margin: 5px; /* Add some spacing between icons */
+    color: white; /* Change icon color */
+  }
+
+}
