@@ -40,3 +40,10 @@
 /*.read-the-docs {*/
 /*  color: #888;*/
 /*}*/
+
+
+.App {
+    max-width: 1300px;
+    margin: 0 auto;
+    /*overflow-x: hidden;*/
+}

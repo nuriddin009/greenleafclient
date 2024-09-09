@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../../assets/greenleaf.png';
 import AppBar from '@mui/material/AppBar';
 import {Toolbar} from '@mui/material';
@@ -14,46 +14,87 @@ import Button from '@mui/material/Button';
 import {Fade} from "react-reveal";
 import LoginIcon from '@mui/icons-material/Login';
 import Dropdown from "../dropdown/index.jsx";
-import {useNavigate} from 'react-router-dom'; // Assuming you're using react-router-dom for navigation
+import {useNavigate} from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import BottomMenu from "../BottomMenu/index.jsx";
+import Menudrawer from "../menudrawer/index.jsx";
 
 function Index(props) {
+    const [scroll, setScroll] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setScroll(true);
+            } else {
+                setScroll(false);
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const commonHeight = '40px';
-    const navigate = useNavigate(); // For navigation
+    const navigate = useNavigate()
+    const [open, setOpen] = React.useState(false);
+
 
     return (
-        <AppBar
-            position="static"
-            color="transparent"
-            elevation={0}
-            sx={{
-                maxWidth: {xs: '100%'}, // Responsive width
-                margin: '0 auto',
-            }}
-        >
-            <Toolbar
+        <>
+            <AppBar
+                position="fixed"
+                color="transparent"
+                elevation={0}
                 sx={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'center', // Center items vertically
-                    flexWrap: 'wrap' // Prevent wrapping to ensure single line
+                    maxWidth: '100%',
+                    margin: '0 auto',
+                    overflowX: 'hidden',
+                    zIndex: 1000,
+                    top: 0,
+                    backgroundColor: scroll ? 'rgba(255, 255, 255, 0.9)' : 'inherit', // Background change on scroll
+                    transition: 'background-color 0.3s ease-in-out', // Smooth transition
+                    boxShadow: scroll ? '0px 4px 12px rgba(0, 0, 0, 0.1)' : 'none', // Optional shadow effect
                 }}
             >
-                {/* Logo */}
-                <Fade left>
-                    <Box display="flex" alignItems="center">
-                        <IconButton>
+                <Toolbar
+                    sx={{
+                        display: 'flex',
+                        flexDirection: {xs: 'column', md: 'row'},
+                        justifyContent: {xs: 'center', md: 'space-between'},
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        padding: {xs: '8px', sm: '16px'},
+                        width: '100%',
+                        boxSizing: 'border-box',
+                    }}
+                >
+                    {/* Logo */}
+                    <Box display="flex" alignItems="center" justifyContent="space-between"
+                         sx={{width: {xs: '100%', md: 'auto'}, p: 2}}>
+                        <IconButton sx={{p: 0}}>
                             <img src={logo} alt="Logo" style={{height: 40}}/>
                         </IconButton>
+                        <Box sx={{display: {xs: 'flex', md: 'none'}}}>
+                            <MenuIcon
+                                onClick={() => setOpen(!open)}
+                                sx={{transform: 'scale(1.2)'}}
+                                color="success"
+                            />
+                        </Box>
                     </Box>
-                </Fade>
 
-                <Fade top>
+                    <Menudrawer open={open} setOpen={setOpen}/>
+
+                    {/* Dropdown and Search Bar for Larger Screens */}
                     <Box
-                        display="flex"
+                        display={{xs: 'none', md: 'flex'}}
                         alignItems="center"
+                        justifyContent="center"
                         sx={{
                             flexGrow: 1,
-                            width: '100%'
+                            gap: '16px',
                         }}
                     >
                         <Dropdown/>
@@ -63,38 +104,38 @@ function Index(props) {
                             color="success"
                             placeholder="Mahsulotlar va turkumlar izlash"
                             sx={{
-                                flexGrow: 1, // Make the search input grow to fill available space
-                                minWidth: '500px',
-                                maxWidth: '600px', // Maximum width to ensure it doesn't become too large
+                                minWidth: '400px',
+                                maxWidth: '600px',
                                 backgroundColor: '#f5f5f5',
                                 borderRadius: '4px',
                                 height: commonHeight,
-                                margin: 'auto' // Pushes the search input to the right
                             }}
                             InputProps={{
-                                sx: {
-                                    height: commonHeight
-                                },
+                                sx: {height: commonHeight},
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton>
                                             <SearchIcon color="success"/>
                                         </IconButton>
                                     </InputAdornment>
-                                )
+                                ),
                             }}
                         />
                     </Box>
-                </Fade>
 
-                {/* User Account, Favorite, and Cart Buttons */}
-                <Fade right>
+                    {/* User Account, Favorite, and Cart Buttons */}
                     <Box
                         display="flex"
                         alignItems="center"
-                        gap="20px" // Consistent gap for buttons
+                        justifyContent="center"
+                        gap="16px"
                         sx={{
-                            flexShrink: 0 // Prevent shrinking of this Box
+                            display: {xs: 'none', md: 'flex'},
+                            flexShrink: 0,
+                            marginTop: {xs: '8px', md: 0},
+                            width: {xs: '100%', md: 'auto'},
+                            boxSizing: 'border-box',
+                            overflowX: 'hidden',
                         }}
                     >
                         {localStorage.getItem('access_token') ? (
@@ -104,7 +145,9 @@ function Index(props) {
                                 color="inherit"
                                 sx={{
                                     textTransform: 'none',
-                                    height: commonHeight
+                                    height: commonHeight,
+                                    fontSize: {xs: '12px', sm: '14px', md: '16px'},
+                                    width: '100%',
                                 }}
                             >
                                 Nuriddin
@@ -116,7 +159,9 @@ function Index(props) {
                                 color="inherit"
                                 sx={{
                                     textTransform: 'none',
-                                    height: commonHeight
+                                    height: commonHeight,
+                                    fontSize: {xs: '12px', sm: '14px', md: '16px'},
+                                    width: '100%',
                                 }}
                             >
                                 Kirish
@@ -128,7 +173,9 @@ function Index(props) {
                             color="inherit"
                             sx={{
                                 textTransform: 'none',
-                                height: commonHeight
+                                height: commonHeight,
+                                fontSize: {xs: '12px', sm: '14px', md: '16px'},
+                                width: '100%',
                             }}
                         >
                             Saralangan
@@ -137,18 +184,68 @@ function Index(props) {
                         <Button
                             startIcon={<ShoppingCartIcon/>}
                             color="inherit"
+                            onClick={() => navigate('/basket')}
                             sx={{
                                 textTransform: 'none',
-                                height: commonHeight
+                                height: commonHeight,
+                                fontSize: {xs: '12px', sm: '14px', md: '16px'},
+                                width: '100%',
                             }}
                         >
                             Savat
                         </Button>
                     </Box>
-                </Fade>
-            </Toolbar>
-        </AppBar>
+                </Toolbar>
+            </AppBar>
+
+            {/* Adjust content for fixed header */}
+            <Box sx={{height: '64px', width: '100%'}}/> {/* Spacer to prevent content overlap */}
+
+            {/* Mobile Search Input */}
+            <Fade bottom>
+                <Box
+                    sx={{
+                        display: {xs: 'flex', md: 'none'},
+                        width: '100%',
+                        padding: '8px 10px',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        mt: 2,
+                        boxSizing: 'border-box',
+                    }}
+                >
+                    <TextField
+                        variant="outlined"
+                        color="success"
+                        placeholder="Mahsulotlar va turkumlar izlash"
+                        fullWidth
+                        sx={{
+                            height: commonHeight,
+                            backgroundColor: '#f5f5f5',
+                            borderRadius: '4px',
+                        }}
+                        InputProps={{
+                            sx: {height: commonHeight},
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <IconButton>
+                                        <SearchIcon color="success"/>
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <IconButton onClick={() => navigate('/wishlist')}>
+                        <FavoriteBorderIcon size="large"/>
+                    </IconButton>
+                </Box>
+            </Fade>
+
+            {/* Bottom Navigation with Icons Only */}
+            <BottomMenu/>
+        </>
     );
+
 }
 
 export default Index;

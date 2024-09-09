@@ -1,0 +1,61 @@
+.team-container {
+  text-align: center;
+  padding: 20px;
+
+  .team-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #388e3c;
+  }
+
+
+
+
+  .team-swiper {
+    width: 100%;
+    padding: 20px 0;
+  }
+
+
+  .team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Box shadow for the team member container
+    border-radius: 50%;
+    background-color: #fff;
+  }
+
+  .team-member-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; // Make the image round
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Box shadow for the image
+  }
+
+  .team-member-title {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #555;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .team-title {
+    font-size: 2rem;
+  }
+
+}
+
+/* Laptop styles */
+@media (min-width: 1024px) {
+
+  .team-title {
+    font-size: 2.5rem;
+  }
+
+}

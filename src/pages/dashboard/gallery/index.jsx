@@ -39,7 +39,7 @@ export default function Index() {
             params: {page}
         }).then(res => {
             const {data, totalPages} = res.data;
-
+            console.log(data)
             setImages(prevImages => {
                 const newImages = data.filter(newImage => !prevImages.some(existingImage => existingImage.id === newImage.id));
                 return [...prevImages, ...newImages];

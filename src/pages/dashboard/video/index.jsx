@@ -24,7 +24,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import {useForm} from "react-hook-form";
 import instance from "../../../utils/instance.js";
-
+import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -143,34 +143,37 @@ function Index(props) {
             >Videolar</Button>
 
 
-            <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
+            {videos.length > 0 &&
+                <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
 
-                <TextField
-                    label={'Qidirish...'}
-                    color='success'
-                    value={search}
-                    onChange={handleSearch}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <SearchIcon color='success'/>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
+                    <TextField
+                        label={'Qidirish...'}
+                        color='success'
+                        value={search}
+                        onChange={handleSearch}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <SearchIcon color='success'/>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
 
-                <Button
-                    size='large'
-                    variant='outlined'
-                    color='success'
-                    onClick={handleClickOpenModal}
-                ><AddCircleOutlineIcon/></Button>
-            </Box>
+                    <Button
+                        size='large'
+                        variant='outlined'
+                        color='success'
+                        onClick={handleClickOpenModal}
+                    ><AddCircleOutlineIcon/></Button>
+                </Box>}
 
             {
-                videos.length === 0 ? <h1 className="text-center"><i>
-                    Videolar mavjud emas
-                </i></h1> : <div>
+                videos.length === 0 ? <EmptyTableData
+                    message="Videolar mavjud emas"
+                    onActionClick={handleClickOpenModal}
+                    actionLabel="Yangi qo'shish"
+                /> : <div>
                     <TableContainer component={Paper}>
                         <Table sx={{minWidth: 700}} aria-label="customized table">
                             <TableHead>

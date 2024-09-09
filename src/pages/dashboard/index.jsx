@@ -57,7 +57,6 @@ const DrawerHeader = styled('div')(({theme}) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 }));
 
@@ -87,13 +86,21 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
         flexShrink: 0,
         whiteSpace: 'nowrap',
         boxSizing: 'border-box',
+        background: 'transparent',
+
         ...(open && {
             ...openedMixin(theme),
             '& .MuiDrawer-paper': openedMixin(theme),
+            '& .MuiDrawer-docked': {
+                background: 'transparent',
+            },
         }),
         ...(!open && {
             ...closedMixin(theme),
             '& .MuiDrawer-paper': closedMixin(theme),
+            '& .MuiDrawer-docked': {
+                background: 'transparent',
+            },
         }),
     }),
 );
@@ -226,7 +233,8 @@ function Index(props) {
                     <Divider/>
                 </List>
             </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
+
+            <Box component="main" sx={{flexGrow: 1, p: 3, width: '100%'}}>
                 <DrawerHeader/>
                 <Outlet/>
             </Box>

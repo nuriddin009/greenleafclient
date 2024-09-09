@@ -34,6 +34,7 @@ import instance from "../../../utils/instance.js";
 import {Controller, useForm} from "react-hook-form";
 import PasswordInput from "../../../components/passwordInput/index.jsx";
 import {toast} from "react-toastify";
+import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -205,7 +206,13 @@ function Index(props) {
         >Mijozlar</Button>
 
 
-        <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
+        {users.length > 0 && <Box sx={{
+            margin: '20px 0',
+            display: 'flex',
+            gap: '1rem',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap'
+        }}>
             <TextField
                 label={'Qidirish...'}
                 color='success'
@@ -248,10 +255,14 @@ function Index(props) {
                 color='success'
                 onClick={handleClickOpenModal}
                 startIcon={<PersonAddIcon/>}>{"Mijoz qo'shish"}</Button>
-        </Box>
+        </Box>}
 
         {
-            users.length === 0 ? <h3 className={"text-center"}><i>{"Mijozlar ro'yxati bo'sh"}</i></h3> : <div>
+            users.length === 0 ? <EmptyTableData
+                message="Mijozlar mavjud emas"
+                onActionClick={handleClickOpenModal}
+                actionLabel="Yangi qo'shish"
+            /> : <div>
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 700}} aria-label="customized table">
                         <TableHead>

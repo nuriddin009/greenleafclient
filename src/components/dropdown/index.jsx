@@ -1,35 +1,27 @@
 import React from 'react';
-import {CssBaseline, List, ListItem, ListItemText, Menu, Toolbar, Typography} from "@mui/material";
+import { CssBaseline, List, ListItem, ListItemText, Menu, Toolbar, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import Box from "@mui/material/Box";
-import img from "../header/img.png";
 import img1 from "../header/img_1.png";
-import {styled} from "@mui/system";
+import { styled } from "@mui/system";
 
-const FullWidthMenu = styled(Menu)(({theme}) => ({
+const FullWidthMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
-        width: window.innerWidth,
+        width: '100%',
         height: '100vh',
         left: 0,
         top: '100%',
-        marginTop: '10px'
+        marginTop: '10px',
+        position: 'relative',  // Ensures proper positioning
+        overflow: 'hidden',     // Prevents scroll when menu is open
     },
 }));
 const categories = [
-    'Maktab bozori',
-    'Yozgi savdo',
-    'Kanselyariya',
-    'Nasiya',
-    'Elektronika',
-    'Maishiy texnika',
-    'Kiyim',
-    'Poyabzallar',
-    'Aksessuarlar',
-    'Go’zallik va parvarish',
-    'Salomatlik',
-    'Uy-ro‘zg‘or buyumlari',
+    'Maktab bozori', 'Yozgi savdo', 'Kanselyariya', 'Nasiya', 'Elektronika',
+    'Maishiy texnika', 'Kiyim', 'Poyabzallar', 'Aksessuarlar',
+    'Go’zallik va parvarish', 'Salomatlik', 'Uy-ro‘zg‘or buyumlari',
     'Qurilish va ta’mirlash',
 ];
 
@@ -37,6 +29,7 @@ function Index(props) {
     const commonHeight = '40px';
     const greenColor = '#6b9a50';
     const [anchorEl, setAnchorEl] = React.useState(null);
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -44,10 +37,11 @@ function Index(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     return (
         <Toolbar>
             <Button
-                startIcon={anchorEl ? <CloseOutlinedIcon/> : <MenuIcon/>}
+                startIcon={anchorEl ? <CloseOutlinedIcon /> : <MenuIcon />}
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
@@ -72,29 +66,27 @@ function Index(props) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-
-                <Box sx={{display: 'flex'}}>
-                    <CssBaseline/>
-
+                <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+                    <CssBaseline />
 
                     <Box
                         sx={{
-                            width: '240px',
+                            width: { xs: '100%', sm: '240px' },
                             bgcolor: 'background.paper',
                             display: 'flex',
                             flexDirection: 'column',
                             position: 'fixed',
-                            top: 64, // Below AppBar
-                            bottom: 35,
-                            borderRight: '2px #000',
-                            overflowY: 'auto', // Enable scrolling if needed
+                            top: 85,
+                            bottom: 30, // Ensure it extends to the bottom
+                            overflowY: 'auto',
+                            zIndex: 1,  // Ensures sidebar stays above content
                         }}
                     >
                         <List>
-                            {categories.map((text, index) => (
+                            {categories.map((text) => (
                                 <ListItem button key={text}>
-                                    <img src={img1} width={25} height={25} alt="img"/>&nbsp;&nbsp;
-                                    <ListItemText primary={text}/>
+                                    <img src={img1} width={25} height={25} alt="img" />&nbsp;&nbsp;
+                                    <ListItemText primary={text} />
                                 </ListItem>
                             ))}
                         </List>
@@ -105,13 +97,13 @@ function Index(props) {
                         sx={{
                             flexGrow: 1,
                             bgcolor: 'background.default',
-
                             p: 3,
-                            marginLeft: '240px', // Adjust margin to account for sidebar
+                            ml: { xs: 0, sm: '240px' }, // Adjust margin based on screen size
+                            width: '100%',
                         }}
                     >
-                        <Toolbar/>
-                        <Typography paragraph>
+                        <Toolbar />
+                        <Typography component="div">
                             <h2>Elektronika</h2>
                             <ul>
                                 <li>Smartfonlar va telefonlar</li>
@@ -123,7 +115,6 @@ function Index(props) {
                         </Typography>
                     </Box>
                 </Box>
-
             </FullWidthMenu>
         </Toolbar>
     );

@@ -11,11 +11,19 @@ import Settings from "./pages/dashboard/settings/index.jsx";
 import Register from "./pages/auth/register/index.jsx";
 import Login from "./pages/auth/login/index.jsx";
 import HomePage from "./pages/dashboard/homePage/index.jsx";
+import './App.css'
+import GalleryPage from "./components/gallery/Gallery.jsx";
+import Wishlist from "./pages/wishlist/index.jsx";
+import Katalog from "./pages/katalog/index.jsx";
+import Basket from "./pages/basket/index.jsx";
+import Cabinet from "./pages/cabinet/index.jsx";
+import NotFound from "./pages/NotFound/index.jsx";
+import Checkout from "./pages/checkout/index.jsx";
 
 function App() {
 
     return (
-        <>
+        <div className={'App'}>
             <Routes>
                 <Route path={'/'} element={<Home/>}/>
                 <Route path={'/dashboard'} element={<Dashboard/>}>
@@ -31,9 +39,15 @@ function App() {
                 <Route path={'/auth/login'} element={<Login/>}/>
                 <Route path={'/auth/register'} element={<Register/>}/>
                 <Route path={'/'} element={<Home/>}/>
-                <Route path={'*'} element={<h1>Not found</h1>}/>
+                <Route path={'/gallery'} element={<GalleryPage/>}/>
+                <Route path={'/wishlist'} element={<Wishlist/>}/>
+                <Route path={'/katalog'} element={<Katalog/>}/>
+                <Route path={'/basket'} element={<Basket/>}/>
+                <Route path={'/cabinet'} element={<Cabinet/>}/>
+                <Route path={'/checkout'} element={<Checkout/>}/>
+                <Route path={'*'} element={<NotFound/>}/>
             </Routes>
-        </>
+        </div>
     )
 }
 

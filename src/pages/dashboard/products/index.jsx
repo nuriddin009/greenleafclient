@@ -30,7 +30,7 @@ import instance from "../../../utils/instance.js";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import parse from 'html-react-parser';
-
+import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
 
 const quillModules = {
     toolbar: [
@@ -268,32 +268,36 @@ function Index(props) {
             startIcon={<ViewListIcon/>}
         >Mahsulotlar</Button>
 
-        <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
-
-            <TextField
-                label={'Qidirish...'}
-                color='success'
-                value={search}
-                onChange={handleSearch}
-                InputProps={{
-                    endAdornment: (<InputAdornment position="end">
-                        <SearchIcon color='success'/>
-                    </InputAdornment>),
-                }}
-            />
-
-            <Button
-                size='large'
-                variant='outlined'
-                color='success'
-                onClick={handleClickOpenModal}
-            ><AddCircleOutlineIcon/></Button>
-        </Box>
-
         {
-            products.length === 0 ? <h3 className="text-center"><i>
-                Mahsulotlar mavjud emas
-            </i></h3> : <div>
+            products.length > 0 &&
+            <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
+
+                <TextField
+                    label={'Qidirish...'}
+                    color='success'
+                    value={search}
+                    onChange={handleSearch}
+                    InputProps={{
+                        endAdornment: (<InputAdornment position="end">
+                            <SearchIcon color='success'/>
+                        </InputAdornment>),
+                    }}
+                />
+
+                <Button
+                    size='large'
+                    variant='outlined'
+                    color='success'
+                    onClick={handleClickOpenModal}
+                ><AddCircleOutlineIcon/></Button>
+            </Box>
+        }
+        {
+            products.length === 0 ? <EmptyTableData
+                message="Mahsulotlar mavjud emas"
+                onActionClick={handleClickOpenModal}
+                actionLabel="Yangi qo'shish"
+            /> : <div>
                 <TableContainer component={Paper}>
                     <Table sx={{minWidth: 700}} aria-label="customized table">
                         <TableHead>
@@ -356,7 +360,7 @@ function Index(props) {
             TransitionComponent={Transition}
             sx={{overflowX: 'hidden'}}
         >
-            <AppBar sx={{position: 'relative'}}>
+            <AppBar sx={{position: 'relative', overflow: 'hidden'}}>
                 <Toolbar>
                     <IconButton
                         edge="start"
@@ -392,7 +396,8 @@ function Index(props) {
                 </label>
 
                 <div style={{
-                    marginTop: '20px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center'
+                    marginTop: '20px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
+                    overflow: 'hidden'
                 }}>
                     {files.map((fileObj, index) => (<div
                         key={index}

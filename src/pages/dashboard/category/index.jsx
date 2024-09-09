@@ -27,7 +27,7 @@ import {useForm} from "react-hook-form";
 import Slide from "@mui/material/Slide";
 import uploadImg from '../../../assets/upload.png'
 import {toast} from "react-toastify";
-
+import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -205,33 +205,39 @@ function Index(props) {
                 startIcon={<DashboardIcon/>}
             >Kategoriyalar</Button>
 
-            <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
-
-                <TextField
-                    label={'Qidirish...'}
-                    color='success'
-                    value={search}
-                    onChange={handleSearch}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <SearchIcon color='success'/>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-
-                <Button
-                    size='large'
-                    variant='outlined'
-                    color='success'
-                    onClick={handleClickOpenModal}
-                ><AddCircleOutlineIcon/></Button>
-
-            </Box>
-
             {
-                categories.length === 0 ? <h3 className="text-center"><i>Kategoriyalar mavjud emas</i></h3>
+                categories.length > 0 &&
+                <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
+
+                    <TextField
+                        label={'Qidirish...'}
+                        color='success'
+                        value={search}
+                        onChange={handleSearch}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <SearchIcon color='success'/>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+
+                    <Button
+                        size='large'
+                        variant='outlined'
+                        color='success'
+                        onClick={handleClickOpenModal}
+                    ><AddCircleOutlineIcon/></Button>
+
+                </Box>
+            }
+            {
+                categories.length === 0 ? <EmptyTableData
+                        message="Kategoriyalar mavjud emas"
+                        onActionClick={handleClickOpenModal}
+                        actionLabel="Yangi qo'shish"
+                    />
                     : <div><TableContainer component={Paper}>
                         <Table sx={{minWidth: 700}} aria-label="customized table">
                             <TableHead>
@@ -285,7 +291,8 @@ function Index(props) {
                                 float: 'right',
                                 marginTop: '20px',
                             }}
-                        /></div>
+                        />
+                    </div>
             }
 
 
@@ -365,7 +372,8 @@ function Index(props) {
 
 
         </div>
-    );
+    )
+        ;
 }
 
 export default Index;

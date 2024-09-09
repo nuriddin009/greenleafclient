@@ -1,6 +1,6 @@
 .home {
   max-width: 100%;
-  padding: 0 20px;
+  //padding: 0 20px;
 
   .swiper-container {
     width: 100%;
@@ -9,25 +9,96 @@
     position: relative;
   }
 
+  /* Navigation buttons */
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 40px; /* Width of the button */
+    height: 40px; /* Height of the button */
+    border-radius: 50%; /* Makes the button circular */
+    background-color: #4caf50; /* Background color for the button */
+    color: white; /* Color of the icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Ensure buttons are on top */
+  }
+
+  /* Navigation button icons */
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 20px; /* Size of the icon */
+    color: white; /* Color of the icon */
+  }
+
+  /* Optional: Change color on hover */
+  .swiper-button-next:hover,
+  .swiper-button-prev:hover {
+    background-color: #388e3c; /* Darker background color on hover */
+  }
+
+
+  .swiper-pagination-bullet {
+    background: #4caf50; /* Success color for pagination bullets */
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #388e3c; /* Darker success color for active bullet */
+  }
+
   .mySwiper {
-    width: 100%;
+    width: 96%;
     height: auto;
     border-radius: 20px;
-
   }
 
   .swiper-slide {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
   }
 
   .swiper-image {
     width: 100%;
     height: auto;
-    max-height: 400px; // Adjust max-height for large screens
-    object-fit: cover; // Maintain image aspect ratio
+    max-height: 400px; /* Adjust max-height for large screens */
+    object-fit: cover; /* Maintain image aspect ratio */
+    transition: all 0.3s ease-in-out;
   }
+
+  .hover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7); /* Black background */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .swiper-slide:hover .hover-overlay {
+    opacity: 1; /* Show on hover */
+  }
+
+  .upload-icon, .delete-icon {
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    margin: 0 10px;
+    z-index: 10;
+  }
+
+  .delete-icon {
+    color: red; /* Red color for the close icon */
+    position: absolute;
+    top: 10px;
+    right: 0;
+  }
+
 
   @media (max-width: 1200px) {
     .swiper-container {
