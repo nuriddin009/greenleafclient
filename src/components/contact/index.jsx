@@ -1,18 +1,60 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './contact.scss';
-import {useForm, Controller} from 'react-hook-form';
-import {TextField, Button, Box, Typography} from '@mui/material';
+import {Controller, useForm} from 'react-hook-form';
+import {Box, Button, TextField, Typography} from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
+import instance from "../../utils/instance.js";
+import parse from "html-react-parser";
+import {toast} from "react-toastify";
 
 
 function Index(props) {
 
-    const {handleSubmit, control, formState: {errors}} = useForm();
+    const {handleSubmit, control, formState: {errors}, reset} = useForm();
+
+    const [contact, setContact] = useState(null)
 
 
     const onSubmit = (data) => {
-        console.log(data);
+
+        instance.post('/v1/app', data).then(res => {
+            reset({
+                fullName: '',
+                email: '',
+                description: '',
+                phoneNumber: '998'
+            })
+            toast.success('Arizangiz qabul qilindi. Siz bilan tez orada bog\'lanamiz')
+            // setTimeout(() => {
+            //     setDisabled(!disabled)
+            // }, 0)
+        })
     };
+
+    useEffect(() => {
+        getContact()
+    }, []);
+
+    const getContact = () => {
+        instance('/v1/dashboard/contact').then(res => {
+            setContact(JSON.parse(res.data.message))
+        })
+    }
+
+    const formatPhoneNumber = (phoneNumber) => {
+        // Remove all non-numeric characters
+        const cleaned = phoneNumber.replace(/\D/g, '');
+
+        // Match and format the phone number
+        const match = cleaned.match(/^(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})$/);
+
+        if (match) {
+            return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}-${match[5]}`;
+        }
+
+        return phoneNumber; // Return the original if the pattern doesn't match
+    };
+
 
     return (
         <div className="contact-container mt-3" id="contact">
@@ -43,7 +85,16 @@ function Index(props) {
                 >
                     <div>
                         <h3 className={'tel'}>Telefonlarimiz:</h3>
-                        <h5>+998 93 453 45 00</h5>
+                        {
+                            contact?.phones?.map((item, index) => (
+                                <h5 key={index}>
+                                    <a href={`tel:${item?.number}`} style={{color: '#000', textDecoration: 'none'}}>
+                                        {formatPhoneNumber(item?.number)}
+                                    </a>
+                                </h5>
+                            ))
+                        }
+
                     </div>
 
                     <div>
@@ -52,7 +103,7 @@ function Index(props) {
 
 
                     <Controller
-                        name="name"
+                        name="fullName"
                         control={control}
                         defaultValue=""
                         rules={{required: 'Ismni kiritsh majburiy'}}
@@ -62,8 +113,8 @@ function Index(props) {
                                 label="To'liq ismingiz"
                                 color='success'
                                 variant="outlined"
-                                error={!!errors.name}
-                                helperText={errors.name ? errors.name.message : ''}
+                                error={!!errors.fullName}
+                                helperText={errors.fullName ? errors.fullName.message : ''}
                             />
                         )}
                     />
@@ -86,7 +137,7 @@ function Index(props) {
                             />
                         )}
                     />
-                    {errors?.phoneNumber && <p>{errors?.phoneNumber?.message}</p>}
+                    {errors?.phoneNumber && <p className={'text-danger'}>{errors?.phoneNumber?.message}</p>}
 
                     <Controller
                         name="email"
@@ -112,7 +163,7 @@ function Index(props) {
                     />
 
                     <Controller
-                        name="message"
+                        name="description"
                         control={control}
                         defaultValue=""
                         rules={{required: 'Xabar kiritish majburiy'}}
@@ -124,8 +175,8 @@ function Index(props) {
                                 color='success'
                                 multiline
                                 rows={4}
-                                error={!!errors.message}
-                                helperText={errors.message ? errors.message.message : ''}
+                                error={!!errors.description}
+                                helperText={errors.description ? errors.description.message : ''}
                             />
                         )}
                     />
@@ -152,6 +203,15 @@ function Index(props) {
                         boxShadow: 3
                     }}
                 >
+                    <div className={'d-flex gap-1 pt-1 pb-0 pl-1'} style={{
+                        boxSizing: 'border-box'
+                    }}>
+                        <p
+                            style={{
+                                boxSizing: 'border-box'
+                            }}
+                            className={'pl-0.5'}>Manzil:</p> <p
+                        className={'p-0.5'}>{contact?.address ? parse(contact?.address) : 'Buxoro'}</p></div>
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2559.6312560564265!2d64.42911107511327!3d39.76736899490709!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f500781e81113b1%3A0x767582d4023bbaac!2sBuxoro%20Savdo%20Majmuasi!5e1!3m2!1sen!2s!4v1725452982022!5m2!1sen!2s"
                         width="100%"
@@ -160,8 +220,6 @@ function Index(props) {
                         allowFullScreen=""
                         loading="lazy"
                     ></iframe>
-
-                    Manzil : Buxoro savdo majbuasi
 
                 </Box>
             </Box>

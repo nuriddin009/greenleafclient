@@ -19,6 +19,9 @@ import Basket from "./pages/basket/index.jsx";
 import Cabinet from "./pages/cabinet/index.jsx";
 import NotFound from "./pages/NotFound/index.jsx";
 import Checkout from "./pages/checkout/index.jsx";
+import Videos from "./pages/videos/index.jsx";
+import Categoryid from "./pages/categoryid/index.jsx";
+import Productid from "./pages/productid/index.jsx";
 
 function App() {
 
@@ -35,17 +38,23 @@ function App() {
                     <Route path={'/dashboard/inbox'} element={<Inbox/>}/>
                     <Route path={'/dashboard/settings'} element={<Settings/>}/>
                     <Route path={'/dashboard/update'} element={<HomePage/>}/>
+                    <Route path={'/dashboard/orders'} element={<NotFound/>}/>
+                    <Route path={'/dashboard/transaction'} element={<NotFound/>}/>
+                    <Route path={'/dashboard/inventory'} element={<NotFound/>}/>
+                    <Route path={'/dashboard/payment'} element={<NotFound/>}/>
                 </Route>
                 <Route path={'/auth/login'} element={<Login/>}/>
                 <Route path={'/auth/register'} element={<Register/>}/>
-                <Route path={'/'} element={<Home/>}/>
                 <Route path={'/gallery'} element={<GalleryPage/>}/>
                 <Route path={'/wishlist'} element={<Wishlist/>}/>
                 <Route path={'/katalog'} element={<Katalog/>}/>
                 <Route path={'/basket'} element={<Basket/>}/>
                 <Route path={'/cabinet'} element={<Cabinet/>}/>
                 <Route path={'/checkout'} element={<Checkout/>}/>
+                <Route path={'/videos'} element={<Videos/>}/>
                 <Route path={'*'} element={<NotFound/>}/>
+                <Route path={'/category/:categoryId'} element={<Categoryid/>}/>
+                <Route path={'/product/:productId'} element={<Productid/>}/>
             </Routes>
         </div>
     )

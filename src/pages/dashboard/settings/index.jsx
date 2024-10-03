@@ -103,7 +103,7 @@ function Index(props) {
                                     type="submit"
                                     sx={{marginTop: 2}}
                                 >
-                                    Change Password
+                                    O'zgartirish
                                 </Button>
                             </form>
                         </CardContent>

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './ourteam.scss'; // Ensure you have your styles here
-import {Pagination, Navigation, Autoplay} from 'swiper/modules';
-import Groups2Icon from '@mui/icons-material/Groups2';
-import {Fade, Zoom} from 'react-reveal';
+import {Autoplay, Navigation, Pagination} from 'swiper/modules';
+import {Bounce, Fade, Zoom} from 'react-reveal';
 import Typography from "@mui/material/Typography";
+import instance from "../../utils/instance.js";
+
 
 const teamData = [
     {
@@ -29,16 +30,35 @@ const teamData = [
 ];
 
 const Index = () => {
+
+
+    const [teams, setTeams] = useState([])
+
+    useEffect(() => {
+        getTeams()
+    }, []);
+
+    const getTeams = () => {
+        instance('/v1/dashboard/our_team').then(res => {
+          setTeams(res.data.data)
+        })
+    }
+
+
     return (
         <div className="team-container" id={'our_team'}>
 
-            <Typography variant="h4" gutterBottom sx={{
-                fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
-                textAlign: 'center'
-            }}>
-                Bizning jamoamiz
-            </Typography>
+            <Fade bottom>
+                <Typography variant="h4" gutterBottom sx={{
+                    fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
+                    textAlign: 'center'
+                }}>
+                    Bizning jamoamiz
+                </Typography>
+            </Fade>
+
             <Swiper
+                key={teams.length}
                 spaceBetween={30}
                 slidesPerView={1}
                 pagination={{
@@ -64,18 +84,28 @@ const Index = () => {
                 }}
                 className="team-swiper"
             >
-                {teamData.map((member, index) => (
+                {teams?.map((member, index) => (
                     <SwiperSlide key={index}>
                         <div>
-                            <div className="team-member">
-                                <img
-                                    src={member.img}
-                                    alt={member.title}
-                                    className="team-member-image"
-                                />
+                            <Fade bottom>
+                                <div className="team-member">
+                                    <img
+                                        src={member?.image?.imageUrl}
+                                        alt={member?.name}
+                                        className="team-member-image"
+                                    />
 
-                            </div>
-                            <h3 className="team-member-title">{member.title}</h3>
+                                </div>
+                            </Fade>
+
+                            <Zoom left>
+                                <h3 className="team-member-title">{member?.name}</h3>
+                            </Zoom>
+
+                            <Bounce bottom>
+                                <p>{member?.profession}</p>
+                            </Bounce>
+
                         </div>
                     </SwiperSlide>
                 ))}

@@ -25,6 +25,7 @@ import Typography from "@mui/material/Typography";
 import {useForm} from "react-hook-form";
 import instance from "../../../utils/instance.js";
 import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
+import YouTubeVideoPlayer from "../../../components/video/YouTubeVideoPlayer.jsx";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -143,7 +144,7 @@ function Index(props) {
             >Videolar</Button>
 
 
-            {videos.length > 0 &&
+
                 <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
 
                     <TextField
@@ -166,7 +167,7 @@ function Index(props) {
                         color='success'
                         onClick={handleClickOpenModal}
                     ><AddCircleOutlineIcon/></Button>
-                </Box>}
+                </Box>
 
             {
                 videos.length === 0 ? <EmptyTableData
@@ -188,11 +189,8 @@ function Index(props) {
                                 {videos.map((video, index) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell component="th" scope="row">
-                                            <ReactPlayer
-                                                url={video?.url}
-                                                width="40%"
-                                                height="200px"
-                                                controls
+                                            <YouTubeVideoPlayer
+                                              videoUrl={video?.url}
                                             />
                                         </StyledTableCell>
                                         <StyledTableCell

@@ -1,0 +1,52 @@
+.mainImage {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    z-index: 1;
+}
+
+.mainImage.active {
+    transform: scale(1.2); /* Enlarge the image on active state */
+    z-index: 999; /* Make sure the active image appears on top */
+}
+
+.mainImage:hover {
+    transform: scale(1.05); /* Slight zoom effect when hovered */
+}
+
+.thumbImage {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+}
+
+@media (max-width: 900px) {
+    .mainImage {
+        height: 300px;
+    }
+
+    .thumbImage {
+        height: 80px;
+    }
+}
+
+@media (max-width: 600px) {
+    .mainImage {
+        height: 250px;
+    }
+
+    .thumbImage {
+        height: 60px;
+    }
+}
+
+.mainSwiper {
+    max-width: 100%;
+}
+
+.thumbSwiper {
+    max-width: 100%;
+    height: 100%;
+    z-index: 10;
+}

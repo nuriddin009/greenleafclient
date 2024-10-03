@@ -1,46 +1,43 @@
 import React, {useEffect, useState} from 'react';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import {useMediaQuery, Button, Typography} from '@mui/material';
+import {Button, Typography, useMediaQuery} from '@mui/material';
 import {Fancybox} from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import './index.scss';
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useNavigate} from "react-router-dom";
-
-
-const itemData = [
-    {img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e', title: 'Breakfast', rows: 2, cols: 2},
-    {img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d', title: 'Burger'},
-    {img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45', title: 'Camera'},
-    {img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c', title: 'Coffee', cols: 2},
-    {img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8', title: 'Hats', cols: 2},
-    {img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62', title: 'Honey', rows: 2, cols: 2},
-    {img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6', title: 'Basketball'},
-    {img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f', title: 'Fern'},
-    {img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25', title: 'Mushrooms', rows: 2, cols: 2},
-    {img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af', title: 'Tomato basil'},
-    {img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1', title: 'Sea star'},
-    {img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6', title: 'Bike', cols: 2},
-];
-
-const srcset = (image, size, rows = 1, cols = 1) => ({
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format&dpr=2 2x`,
-});
+import instance from "../../utils/instance.js";
 
 const Index = () => {
+    const [images, setImages] = useState([]);
+
     useEffect(() => {
-        Fancybox.bind('[data-fancybox="gallery"]', {});
+        if (images.length > 0) {
+            Fancybox.bind('[data-fancybox="gallery"]', {});
+        }
         return () => Fancybox.destroy();
+    }, [images]);
+
+    useEffect(() => {
+        instance.get('/v1/gallery', {params: {page: 0}})
+            .then((response) => {
+                const fetchedData = response.data.data.map(item => ({
+                    img: item?.attachment?.url,
+                    description: item?.description,
+                    imgOrder: item?.imgOrder,
+                }));
+                setImages(fetchedData);
+            })
+            .catch((error) => {
+                console.error('Error fetching images:', error);
+            });
     }, []);
 
     const [isExpanded, setIsExpanded] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
-        navigate('/gallery')
+        navigate('/gallery');
     };
 
     // Use media queries to determine the number of columns based on screen size
@@ -53,7 +50,7 @@ const Index = () => {
         if (isSmallScreen) return 2;
         if (isMediumScreen) return 4;
         if (isLargeScreen) return 6;
-        return 8;
+        return 6; // Default to 6 columns for larger screens
     };
 
     const getVisibleItems = () => {
@@ -64,54 +61,71 @@ const Index = () => {
 
 
     return (
-        <div className="gallery-container" id={'galleriya'} style={{textAlign: 'center'}}>
-            <Typography variant="h4" gutterBottom  sx={{
+        <div className="gallery-container" id={'galleriya'} style={{
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            padding: '20px'
+        }}>
+            <Typography variant="h4" gutterBottom sx={{
                 fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
                 textAlign: 'center'
             }}>
                 Galleriya
             </Typography>
-            <ImageList
-                sx={{
-                    width: '100%', // Maintain 50% width
-                    margin: '0 auto', // Center the gallery horizontally
-                    gap: 0, // Remove gap between images
+            <div
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center'
                 }}
-                variant="standard"
-                cols={getColumns()} // Responsive columns
             >
-                {itemData?.slice(0, getVisibleItems()).map((item) => (
-                    <ImageListItem
-                        key={item.img}
-                        cols={isSmallScreen ? 1 : (item.cols || 1)}
-                        rows={isSmallScreen ? 1 : (item.rows || 1)}
-                        sx={{margin: 0, padding: 0}} // Remove margin and padding from items
-                    >
-                        <a href={item.img} data-fancybox="gallery" data-caption={item.title}>
-                            <img
-                                {...srcset(item.img, 121, item.rows, item.cols)}
-                                alt={item.title}
-                                loading="lazy"
-                                className="gallery-image"
-                                style={{
-                                    width: '100%', // Ensure images fit their container
-                                    height: 'auto',
-                                    display: 'block',
-                                }}
-                            />
-                        </a>
-                    </ImageListItem>
-                ))}
-            </ImageList>
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: `repeat(${getColumns()}, 1fr)`,
+                        gap: '8px',
+                        maxWidth: '1280px',
+                        width: '100%',
+                        margin: '0 auto',
+                        gridAutoRows: '1fr', // Ensures the grid items grow to fill the available space
+                    }}
+                >
+                    {images.slice(0, getVisibleItems()).map((item, index) => (
+                        <div key={index} style={{position: 'relative', paddingBottom: '100%', overflow: 'hidden'}}>
+                            <a href={item.img} data-fancybox="gallery"
+                               data-caption={item.description}>
+                                <img
+                                    srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                    src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                                    alt={item.description}
+                                    loading="lazy"
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                    }}
+                                />
+                            </a>
+                        </div>
+                    ))}
+                </div>
+            </div>
             <Button
                 sx={{
                     mt: 2,
-                    textTransform: 'none'
                 }}
                 startIcon={isExpanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                 color='success'
                 onClick={handleToggle}
-                variant={'contained'}>Ko'poq ko'rish</Button>
+                variant={'contained'}
+            >
+                Ko'poq ko'rish
+            </Button>
         </div>
     );
 };

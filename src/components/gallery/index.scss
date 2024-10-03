@@ -11,14 +11,14 @@
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 10px; /* Adjust spacing between items */
   justify-content: center;
 }
 
 .gallery-image {
-  width: 100%;
-  height: auto;
+  width: 300px;
+  height: 300px;
   border-radius: 5px; /* Optional: to add some styling to the images */
   object-fit: cover; /* Ensures images cover their container */
 }

@@ -65,12 +65,14 @@ function Index(props) {
         })
     }
 
-    const deleteApp = (item) => {
-        instance.delete('/v1/app', {
-            params: {id: item?.id}
-        }).then(res => {
-            getApps(0)
-        })
+    const deleteApp = (item, index) => {
+        if (window.confirm(`${index}-raqamdagi arizani o'chirmoqchimisiz?`)) {
+            instance.delete('/v1/app', {
+                params: {id: item?.id}
+            }).then(res => {
+                getApps(0)
+            })
+        }
     }
 
 
@@ -96,6 +98,7 @@ function Index(props) {
                             <Table sx={{minWidth: 700}} aria-label="customized table">
                                 <TableHead>
                                     <TableRow>
+                                        <StyledTableCell>T/r</StyledTableCell>
                                         <StyledTableCell>Ismi</StyledTableCell>
                                         <StyledTableCell align="right">Tel raqam</StyledTableCell>
                                         <StyledTableCell align="right">Pochta</StyledTableCell>
@@ -105,9 +108,12 @@ function Index(props) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {apps.map((app) => (
+                                    {apps.map((app, index) => (
                                         <StyledTableRow key={app?.id}>
                                             <StyledTableCell component="th" scope="row">
+                                                {index + 1}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="right">
                                                 {app?.fullName}
                                             </StyledTableCell>
                                             <StyledTableCell align="right">{app?.phoneNumber}</StyledTableCell>
@@ -116,7 +122,8 @@ function Index(props) {
                                                 align="right">{new Date(app?.createdAt).toLocaleString()}</StyledTableCell>
                                             <StyledTableCell align="right">{app?.description}</StyledTableCell>
                                             <StyledTableCell align="right">
-                                                <Button variant='contained' color='error' onClick={() => deleteApp(app)}>
+                                                <Button variant='contained' color='error'
+                                                        onClick={() => deleteApp(app, index + 1)}>
                                                     <DeleteOutlineIcon/>
                                                 </Button>
                                             </StyledTableCell>

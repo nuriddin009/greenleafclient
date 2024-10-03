@@ -1,7 +1,6 @@
 .home {
-  max-width: 100%;
-  //padding: 0 20px;
-
+  max-width: 98vw;
+  margin: 0 auto;
   .swiper-container {
     width: 100%;
     max-width: 1300px;
@@ -10,6 +9,7 @@
   }
 
   /* Navigation buttons */
+  /* Base styles for navigation buttons */
   .swiper-button-next,
   .swiper-button-prev {
     width: 40px; /* Width of the button */
@@ -36,6 +36,34 @@
     background-color: #388e3c; /* Darker background color on hover */
   }
 
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 35px; /* Smaller width for smaller screens */
+      height: 35px; /* Smaller height for smaller screens */
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 18px; /* Smaller icon size for smaller screens */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 30px; /* Further reduce size for very small screens */
+      height: 30px; /* Further reduce size for very small screens */
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 16px; /* Further reduce icon size for very small screens */
+    }
+  }
+
+
 
   .swiper-pagination-bullet {
     background: #4caf50; /* Success color for pagination bullets */
@@ -44,6 +72,7 @@
   .swiper-pagination-bullet-active {
     background: #388e3c; /* Darker success color for active bullet */
   }
+
 
   .mySwiper {
     width: 96%;
@@ -84,7 +113,7 @@
     opacity: 1; /* Show on hover */
   }
 
-  .upload-icon, .delete-icon {
+  .upload-icon {
     color: white;
     font-size: 24px;
     cursor: pointer;
@@ -96,13 +125,24 @@
     color: red; /* Red color for the close icon */
     position: absolute;
     top: 10px;
-    right: 0;
+    right: 60px;
+    z-index: 10;
+
+  }
+
+
+  .delete-icon .MuiSvgIcon-root {
+    font-size: 36px; /* Adjust to fit well */
+  }
+
+  .swiper-container{
+    //margin-left: 10px;
   }
 
 
   @media (max-width: 1200px) {
     .swiper-container {
-      max-width: 100%; // Adjust max-width for smaller screens
+      max-width: 100%;
     }
   }
 
@@ -110,17 +150,20 @@
     .swiper-image {
       max-height: 300px; // Adjust height for tablets
     }
+    .delete-icon{
+      right: 20px;
+    }
   }
 
   @media (max-width: 768px) {
     .swiper-image {
-      max-height: 250px; // Adjust height for smaller tablets
+      max-height: 300px; // Adjust height for smaller tablets
     }
   }
 
   @media (max-width: 480px) {
     .swiper-image {
-      max-height: 200px; // Adjust height for mobile
+      max-height: 250px; // Adjust height for mobile
     }
   }
 }

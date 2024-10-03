@@ -94,7 +94,6 @@ function Index(props) {
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then(res => {
-                    console.log(res.data)
                     reset({
                         name: '',
                         description: ''
@@ -205,8 +204,7 @@ function Index(props) {
                 startIcon={<DashboardIcon/>}
             >Kategoriyalar</Button>
 
-            {
-                categories.length > 0 &&
+
                 <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
 
                     <TextField
@@ -231,7 +229,7 @@ function Index(props) {
                     ><AddCircleOutlineIcon/></Button>
 
                 </Box>
-            }
+
             {
                 categories.length === 0 ? <EmptyTableData
                         message="Kategoriyalar mavjud emas"

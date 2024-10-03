@@ -271,7 +271,7 @@ export default function Index() {
                     onClick={handleLoadMore}
                     sx={{mt: 2}}
                 >
-                    Load More
+                    Yana ko'rsatish
                 </Button>
             )}
 

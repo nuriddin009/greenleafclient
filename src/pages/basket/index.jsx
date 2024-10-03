@@ -1,176 +1,219 @@
-import React, {useState} from 'react';
-import {Box, Button, Grid, Typography, TextField, IconButton, MenuItem} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Box, Button, Card, CardContent, Divider, Grid, IconButton, TextField, Typography} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import BottomMenu from '../../components/BottomMenu/index.jsx';
-import EmptyTableData from "../../components/emptydata/EmptyTableData.jsx";
 import {useNavigate} from "react-router-dom";
-
-const products = [
-    {
-        id: 1,
-        name: 'Cotton T-shirt',
-        price: 440000.0,
-        quantity: 1,
-        image: 'https://via.placeholder.com/100',
-    },
-    {
-        id: 2,
-        name: 'Cotton T-shirt',
-        price: 45000.0,
-        quantity: 1,
-        image: 'https://via.placeholder.com/100',
-    },
-    {
-        id: 3,
-        name: 'Cotton T-shirt',
-        price: 120044.0,
-        quantity: 1,
-        image: 'https://via.placeholder.com/100',
-    },
-];
+import parse from "html-react-parser";
+import EmptyBasket from "./EmptyBasket.jsx";
+import {useDispatch, useSelector} from "react-redux";
+import {changeQuantity, removeFromCart} from "../../features/cartSlice.js"; // Updated import for remove
 
 const Index = () => {
-    const [cart, setCart] = useState(products);
-    const [shipping, setShipping] = useState(5.0);
     const [code, setCode] = useState('');
+    const dispatch = useDispatch();
+    const cart = useSelector((state) => state.cart.items); // Get cart from Redux store
 
-    const handleQuantityChange = (id, increment) => {
-        setCart(cart.map(item =>
-            item.id === id ? {...item, quantity: item.quantity + increment} : item
-        ));
-    };
-
-    const handleRemove = (id) => {
-        setCart(cart.filter(item => item.id !== id));
-    };
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+    const formatNumber = (inputNumber) => {
+        return Math.round(Number(inputNumber)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + " so'm";
+    };
+
+    const getDesc = (x) => {
+        const MAX_WORDS = 27;
+        const extractText = (element) => {
+            let text = '';
+            if (typeof element === 'string') {
+                text += element;
+            } else if (Array.isArray(element)) {
+                element.forEach((child) => {
+                    text += extractText(child);
+                });
+            } else if (element?.props?.children) {
+                text += extractText(element.props.children);
+            }
+            return text;
+        };
+
+        let elements = parse(x);
+        let text = extractText(elements);
+        if (!text) return '';
+
+        const words = text.trim().split(/\s+/);
+        if (words.length > MAX_WORDS) {
+            return `${words.slice(0, MAX_WORDS).join(' ')}...`;
+        }
+
+        return text;
+    };
+
     return (
         <>
-            <Box p={2} sx={{maxWidth: '1200px', mx: 'auto', boxShadow: 3, borderRadius: 2, bgcolor: 'white'}}>
-                <Grid container spacing={2}>
-                    {/* Left section: Cart Items */}
+            <Box sx={{
+                width: '100%', // Full width by default
+                maxWidth: {xs: '100%', md: '100%'}, // Full width on all screen sizes
+                mx: 'auto', // Center the content
+                my: 4,
+                p: 2,
+            }}>
+                {cart.length === 0 && <EmptyBasket/>}
+                <Grid container spacing={4}>
+                    {/* Cart Items Section */}
                     <Grid item xs={12} md={8}>
-                        <Typography variant="h5" gutterBottom textAlign='center'>
+                        {cart.length > 0 && <Typography variant="h4" gutterBottom align="center">
                             Savat
-                        </Typography>
+                        </Typography>}
 
-                        {cart.length === 0 ? (
-                            <EmptyTableData
-                                message="Savatda hozircha mahsulot yo'q"
-                                actionLabel={'Bosh sahifa'}
-                                onActionClick={() => navigate('/')}
-                            />
-                        ) : (
+                        {cart.length > 0 && (
                             cart.map((product) => (
-                                <Grid
-                                    container
-                                    key={product.id}
-                                    alignItems="center"
-                                    spacing={2}
-                                    py={2}
-                                    borderBottom={1}
-                                    borderColor="grey.300"
-                                    sx={{
-                                        // Stack vertically on small screens
-                                        flexDirection: {xs: 'column', sm: 'row'},
-                                    }}
-                                >
-                                    <Grid item xs={12} sm={2}>
-                                        <img src={product.image} alt={product.name}
-                                             style={{width: '100%', borderRadius: '8px'}}/>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <Typography variant="subtitle1">{product.name}</Typography>
-                                        <Typography variant="body2" color="textSecondary">Shirt</Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <Box display="flex" alignItems="center"
-                                             justifyContent={{xs: 'center', sm: 'flex-start'}}>
+                                <Card key={product.id} sx={{mb: 2, p: 2, borderRadius: '12px', boxShadow: 3}}>
+                                    <Grid container alignItems="center" spacing={2}>
+                                        <Grid item xs={12} sm={1} display={'flex'} justifyContent={'end'} sx={{
+                                            display: {sm: 'none', xs: 'flex'}
+                                        }}>
                                             <IconButton
-                                                onClick={() => handleQuantityChange(product.id, -1)}
-                                                disabled={product.quantity === 1}
-                                                sx={{color: 'success.main'}}
-                                            >
-                                                <RemoveCircleIcon fontSize="large"/>
+                                                onClick={() => dispatch(removeFromCart(product.id))} // Dispatch remove
+                                                sx={{color: 'error.main'}}>
+                                                <HighlightOffIcon fontSize="large"/>
                                             </IconButton>
-                                            <Typography variant="body1" mx={2}>
-                                                {product.quantity}
+                                        </Grid>
+                                        <Grid item xs={6} sm={2}> {/* Increased sm and md values for more space */}
+                                            <Box
+                                                sx={{
+                                                    overflow: 'hidden',
+                                                    borderRadius: '12px',
+                                                    '&:hover img': {
+                                                        transform: 'scale(1.1)',
+                                                    }
+                                                }}>
+                                                <img
+                                                    src={product?.images[0]?.url}
+                                                    alt={product?.name}
+                                                    style={{width: '100%', transition: 'transform 0.3s ease'}}
+                                                />
+                                            </Box>
+                                        </Grid>
+
+
+                                        <Grid item xs={4} sm={4}>
+                                            <Typography variant="h6" sx={{fontWeight: '500'}}>
+                                                {product?.name}
                                             </Typography>
-                                            <IconButton onClick={() => handleQuantityChange(product.id, 1)}
-                                                        sx={{color: 'success.main'}}>
-                                                <AddCircleIcon fontSize="large"/>
+                                            <Typography variant="body2" color="textSecondary">
+                                                {product?.description ? getDesc(product?.description) : 'Product description here.'}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12} sm={3}>
+                                            <Box display="flex" alignItems="center"
+                                                 justifyContent={{xs: 'center', sm: 'flex-start'}}>
+                                                <IconButton
+                                                    onClick={() => dispatch(changeQuantity({
+                                                        id: product.id,
+                                                        increment: -1
+                                                    }))}
+                                                    disabled={product.quantity === 1}
+                                                    sx={{color: '#ff1744'}}
+                                                >
+                                                    <RemoveCircleIcon fontSize="large"/>
+                                                </IconButton>
+                                                <Typography variant="body1" mx={2}>
+                                                    {product.quantity}
+                                                </Typography>
+                                                <IconButton
+                                                    onClick={() => dispatch(changeQuantity({
+                                                        id: product.id,
+                                                        increment: 1
+                                                    }))}
+                                                    sx={{color: '#00e676'}}
+                                                >
+                                                    <AddCircleIcon fontSize="large"/>
+                                                </IconButton>
+                                            </Box>
+                                        </Grid>
+                                        <Grid item xs={12} sm={2}>
+                                            <Typography variant="body1"
+                                                        sx={{
+                                                            textAlign: {xs: 'center', sm: 'left'},
+                                                            fontWeight: '500',
+                                                            // whiteSpace: 'nowrap'
+                                                        }}>
+                                                {` ${formatNumber(product.price * product.quantity)}`}
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={12} sm={1} display={'flex'} justifyContent={'space-between'}
+                                              sx={{
+                                                  display: {sm: 'flex', xs: 'none'}
+                                              }}>
+                                            <IconButton
+                                                onClick={() => dispatch(removeFromCart(product.id))} // Dispatch remove
+                                                sx={{color: 'error.main'}}>
+                                                <HighlightOffIcon fontSize="large"/>
                                             </IconButton>
-                                        </Box>
+                                        </Grid>
+
                                     </Grid>
-                                    <Grid item xs={12} sm={2} sx={{textAlign: {xs: 'center', sm: 'left'}}}>
-                                        <Typography
-                                            variant="body1">{(product.price * product.quantity).toFixed(2)}UZS</Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={1} sx={{textAlign: {xs: 'center', sm: 'left'}}}>
-                                        <IconButton onClick={() => handleRemove(product.id)} sx={{color: 'error.main'}}>
-                                            <HighlightOffIcon fontSize="large"/>
-                                        </IconButton>
-                                    </Grid>
-                                </Grid>
+                                </Card>
                             ))
                         )}
                     </Grid>
 
-                    {/* Right section: Summary */}
+                    {/* Summary Section */}
                     {
-                        cart.length > 0 && <Grid item xs={12} md={4}>
-                            <Box sx={{p: 3, borderRadius: 2, boxShadow: 2}}>
-                                <Typography variant="h6" gutterBottom>
-                                    Summary
-                                </Typography>
-
-                                <Grid container justifyContent="space-between" py={1}>
-                                    <Typography variant="body1">Items {cart.length}</Typography>
-                                    <Typography variant="body1">€{totalPrice.toFixed(2)}</Typography>
-                                </Grid>
-
-                                <Grid container justifyContent="space-between" py={1}>
-                                    <Typography variant="body1">Shipping</Typography>
+                        cart.length > 0 &&
+                        <Grid item xs={12} md={4}>
+                            <Card sx={{boxShadow: 3, borderRadius: '12px'}}>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom sx={{fontWeight: '500'}}>
+                                        Buyurtma xulosasi
+                                    </Typography>
+                                    <Box display="flex" justifyContent="space-between" mb={1}>
+                                        <Typography variant="body1">Yig'indi:</Typography>
+                                        <Typography variant="body1">{formatNumber(totalPrice)}</Typography>
+                                    </Box>
+                                    <Box display="flex" justifyContent="space-between" mb={1}>
+                                        <Typography variant="body1">Yetkazib berish:</Typography>
+                                        <Typography variant="body1">Bepul</Typography>
+                                    </Box>
+                                    <Divider sx={{my: 2}}/>
                                     <TextField
-                                        select
-                                        value={shipping}
-                                        onChange={(e) => setShipping(parseFloat(e.target.value))}
+                                        fullWidth
+                                        label="Chegirma kodini qo'shing"
                                         variant="outlined"
                                         size="small"
-                                        fullWidth
-                                    >
-                                        <MenuItem value={5.0}>Standard Delivery - €5.00</MenuItem>
-                                        <MenuItem value={10.0}>Express Delivery - €10.00</MenuItem>
-                                    </TextField>
-                                </Grid>
-
-                                <Grid container justifyContent="space-between" py={1}>
-                                    <Typography variant="body1">Give Code</Typography>
-                                    <TextField
-                                        placeholder="Enter your code"
                                         value={code}
                                         onChange={(e) => setCode(e.target.value)}
-                                        size="small"
-                                        variant="outlined"
-                                        fullWidth
+                                        sx={{mb: 2}}
                                     />
-                                </Grid>
-
-                                <Grid container justifyContent="space-between" py={1} mt={2}>
-                                    <Typography variant="body1">Total Price</Typography>
-                                    <Typography variant="h6">€{(totalPrice + shipping).toFixed(2)}</Typography>
-                                </Grid>
-                            </Box>
+                                    <Box display="flex" justifyContent="space-between" mb={2}>
+                                        <Typography variant="h6" sx={{fontWeight: '500'}}>Jami:</Typography>
+                                        <Typography variant="h6"
+                                                    sx={{fontWeight: '500'}}>{formatNumber(totalPrice)}</Typography>
+                                    </Box>
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        color="success"
+                                        size="large"
+                                        onClick={() => navigate('/checkout')}
+                                        sx={{textTransform: 'none'}}
+                                    >
+                                        To'lash
+                                    </Button>
+                                </CardContent>
+                            </Card>
                         </Grid>
                     }
-                </Grid>
 
-                {/* Fixed Bottom Bar */}
+                </Grid>
+                <br/><br/>
+                <br/>
+
+                {/* Fixed Bottom Bar for Mobile */}
                 {cart.length > 0 && (
                     <Box
                         sx={{
@@ -188,10 +231,10 @@ const Index = () => {
                         }}
                     >
                         <div>
-                            <Typography variant="h6">
-                                Jami: {(totalPrice + shipping).toFixed(2)}UZS
+                            <Typography variant="h6" sx={{fontWeight: '500'}}>
+                                Jami: {formatNumber(totalPrice)}
                             </Typography>
-                            <p>2 ta mahsulot</p>
+                            <Typography variant="body2">{cart.length} ta mahsulot</Typography>
                         </div>
                         <Button
                             variant="contained"
@@ -199,16 +242,11 @@ const Index = () => {
                             sx={{textTransform: 'none'}}
                             onClick={() => navigate('/checkout')}
                         >
-                            Rasmiylashtirish
+                            To'lash
                         </Button>
                     </Box>
                 )}
-            </Box>
-            <Box sx={{
-                display: {xs: 'flex', md: 'none'}
-            }}>
-                <br/><br/>
-                <br/><br/>
+
                 <br/><br/>
             </Box>
             <BottomMenu/>

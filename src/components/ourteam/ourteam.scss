@@ -9,8 +9,6 @@
   }
 
 
-
-
   .team-swiper {
     width: 100%;
     padding: 20px 0;
@@ -29,11 +27,18 @@
   }
 
   .team-member-image {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%; // Make the image round
     object-fit: cover;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Box shadow for the image
+  }
+
+  @media (max-width: 768px) {
+    .team-member-image {
+      width: 150px;
+      height: 150px;
+    }
   }
 
   .team-member-title {

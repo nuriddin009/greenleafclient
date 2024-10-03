@@ -93,7 +93,6 @@ function Index(props) {
                 page
             }
         }).then(res => {
-            console.log(res.data)
             setUsers(res.data.elements)
             setTotalPages(res.data?.requestPage?.pageLimit)
         })
@@ -206,7 +205,7 @@ function Index(props) {
         >Mijozlar</Button>
 
 
-        {users.length > 0 && <Box sx={{
+        <Box sx={{
             margin: '20px 0',
             display: 'flex',
             gap: '1rem',
@@ -255,7 +254,8 @@ function Index(props) {
                 color='success'
                 onClick={handleClickOpenModal}
                 startIcon={<PersonAddIcon/>}>{"Mijoz qo'shish"}</Button>
-        </Box>}
+        </Box>
+
 
         {
             users.length === 0 ? <EmptyTableData

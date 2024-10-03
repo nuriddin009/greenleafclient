@@ -1,0 +1,25 @@
+
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  animation: ripple 0.6s linear;
+  pointer-events: none; /* Prevent interaction */
+}
+
+.circle {
+  width: 70px; /* Adjust size as needed */
+  height: 70px; /* Adjust size as needed */
+}

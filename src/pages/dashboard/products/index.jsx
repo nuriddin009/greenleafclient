@@ -28,13 +28,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import PriceInput from "../../../components/PriceFormat/index.jsx";
 import instance from "../../../utils/instance.js";
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css';
 import parse from 'html-react-parser';
 import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
 
 const quillModules = {
     toolbar: [
-        [{'header': '1'}, {'header': '2'}, {'font': []}],
+        [{'header': '1'}, {'header': '2'}, {'header': '3'}, {'header': '4'}, {'font': []}],
         [{'list': 'ordered'}, {'list': 'bullet'}],
         ['bold', 'italic', 'underline'],
         [{'color': []}, {'background': []}],
@@ -268,8 +268,7 @@ function Index(props) {
             startIcon={<ViewListIcon/>}
         >Mahsulotlar</Button>
 
-        {
-            products.length > 0 &&
+
             <Box sx={{margin: '20px 0', display: 'flex', gap: '1rem', justifyContent: 'space-between'}}>
 
                 <TextField
@@ -291,7 +290,7 @@ function Index(props) {
                     onClick={handleClickOpenModal}
                 ><AddCircleOutlineIcon/></Button>
             </Box>
-        }
+
         {
             products.length === 0 ? <EmptyTableData
                 message="Mahsulotlar mavjud emas"

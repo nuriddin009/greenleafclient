@@ -6,6 +6,7 @@ import {Box, TextField, Button, Typography} from '@mui/material';
 import 'react-credit-cards/es/styles-compiled.css';
 import clickImg from './click.png';
 import paymeImg from './payme.png';
+import {useNavigate} from "react-router-dom";
 
 const Index = () => {
     const {register, handleSubmit, watch, setValue, formState: {errors}} = useForm();
@@ -26,6 +27,8 @@ const Index = () => {
     const formatExpiry = (value) => {
         return value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2').trim();
     };
+
+    const navigate = useNavigate()
 
     return (
         <Box sx={{
@@ -119,7 +122,7 @@ const Index = () => {
                         inputProps={{maxLength: 3}}
                     />
                     <Button type="submit" variant="contained" color="primary" fullWidth sx={{mb: 2}}>
-                        Pay Now
+                        To'lash
                     </Button>
                 </form>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', mt: 2}}>
@@ -138,6 +141,7 @@ const Index = () => {
                         mt: 2,
                     }}
                     fullWidth
+                    onClick={()=>navigate('/')}
                 >Bosh sahifaga</Button>
             </Box>
             <Box sx={{flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>

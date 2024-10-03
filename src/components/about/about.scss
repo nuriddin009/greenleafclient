@@ -3,7 +3,9 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  //align-items: start;
+  align-items: center;
+  margin: 0 auto;
+
 
 
   .about-title {
@@ -38,26 +40,42 @@
       flex-direction: column;
     }
   }
+  .image-container {
+    width: 100%; /* Adjust to fit your layout */
+    height: 200px;
+    max-width: 300px; /* Max width for the container */
+    overflow: hidden; /* Hide overflow to ensure image does not go outside the container */
+    position: relative; /* Required for positioning */
+    border-radius: 10px; /* Optional: rounded corners */
+    //border: 2px solid #ddd; /* Optional: border for visibility */
+  }
 
   .responsive-image {
     max-width: 300px;
     width: 100%;
-    height: auto;
-    margin-right: 20px; // Space between image and text
-    display: inline;
+    height: 100%;
+    margin-right: 20px; /* Space between image and text */
+    display: inline-block; /* Ensure the image is treated as a block-level element for margin purposes */
 
     transition: transform 0.3s ease-in-out; /* Smooth scaling */
-    object-fit: cover; /* Ensure the image covers its frame */
-
-    @media (max-width: 1024px) {
-      margin: 0 auto 20px auto; // Center image and add spacing below on smaller screens
-    }
-
-    &:hover {
-      transform: scale(1.05); /* Slightly enlarge the image on hover */
-    }
-
+    //object-fit: cover; /* Ensure the image covers its frame */
   }
+
+  @media (max-width: 1024px) {
+    .responsive-image {
+      margin: 0 auto; /* Center image and add spacing below on smaller screens */
+      display: block; /* Center image with block display */
+    }
+    .image-container{
+      margin: 0 auto;
+    }
+  }
+
+
+  .responsive-image:hover {
+    transform: scale(1.1); /* Slightly enlarge the image on hover */
+  }
+
 
   .responsive-text-container {
     flex: 1;

@@ -1,17 +1,32 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './about.scss';
 import {Button} from '@mui/material';
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {Fade, Zoom} from 'react-reveal'
 import Typography from "@mui/material/Typography";
+import instance from "../../utils/instance.js";
+import uploadImg from "../../assets/uploadImg.png";
+import parse from "html-react-parser";
 
 function Index(props) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [about, setAbout] = useState(null)
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
     };
+
+    useEffect(() => {
+        getAbout()
+    }, []);
+
+    const getAbout = () => {
+        instance('/v1/dashboard/about').then(res => {
+            setAbout(res.data.data)
+        })
+    }
+
 
     return (
         <div className="about-container" id="about">
@@ -22,60 +37,49 @@ function Index(props) {
                                 textAlign: 'center'
                             }}
                 >
-                    Kompaniya haqida🌱
+                    Kompaniya haqida 🌱
                 </Typography>
             </Zoom>
-            <div className="responsive-container">
-                <Fade bottom>
-                    <img
-                        src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
-                        alt="Kompaniya Binosi"
-                        className="responsive-image"
-                    />
-                </Fade>
-                <div className="responsive-text-container">
+            <div>
+                <div className="responsive-container">
                     <Fade bottom>
-                        <p>Greenleaf kompaniyasi (Suzhou Greenleaf Daily Commodity Co. Ltd) Suzhou shahridagi yuqori
-                            texnologiyali
-                            zonada joylashgan va uning asosiy kapitali 22 million dollarni tashkil etadi.</p>
-                        <p>Bu zamonaviy yuqori texnologiyali guruh bo'lib, ilmiy tadqiqotlar, ishlab chiqarish, xalqaro
-                            hamkorlik,
-                            brendni ilgari surish va marketingni birlashtiradi.</p>
-                        <p>Industriyal kosmetik park go'zallik sanoatining biologik asosidir. Uning umumiy ishlab
-                            chiqarish
-                            quvvatining
-                            yiliga 80 000 tonnani tashkil etishi kutilmoqda.</p>
-                        <p>Ishlab chiqarish liniyasi Germaniya, Fransiya va Italiyadan kelgan zamonaviy ishlab chiqarish
-                            uskunalaridan
-                            foydalanadi,</p>
+                        <div className="image-container">
+                            <img
+                                src={about?.imageUrl ? about?.imageUrl : uploadImg}
+                                alt="Kompaniya Binosi"
+                                className="responsive-image"
+                            />
+                        </div>
                     </Fade>
+                    <div className="responsive-text-container">
+                        <Fade bottom>
+                            {about?.descriptionP1 ? parse(about?.descriptionP1) : "Malumotlar yo'q"}
+                        </Fade>
 
+                    </div>
+                </div>
+                <div style={{
+                    padding: '20px'
+                }}>
                     {isExpanded && (
                         <div className="text-left">
-                            <p>hamda so'nggi 20 yil ichida mustaqil tadqiqotlar va kimyoviy mahsulotlar ishlab chiqishga
-                                asoslangan
-                                xalqaro yetakchi sifat nazorati tizimi mavjud.</p>
-                            <p>2016-yil 16-martda Xitoy Xalq Respublikasi Savdo Vazirligi Greenleaf Suzhou'ga
-                                to'g'ridan-to'g'ri marketing
-                                uchun litsenziya berdi. Partiya va milliy hukumatning muhim qo'llab-quvvatlovi va
-                                yordamiga ega bo'lgan
-                                Greenleaf qonunlarga muvofiq faoliyat yuritib, zamon ruhiga mos ravishda va Greenleaf
-                                xususiyatlarini
-                                hisobga olgan holda rivojlanadi.</p>
+                            {about?.descriptionP2 ? parse(about?.descriptionP2) : ''}
                         </div>
                     )}
                     <Fade bottom>
-                        <Button
+                        {about?.descriptionP2 && <Button
                             startIcon={isExpanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
                             sx={{textTransform: 'none'}}
-                            variant='contained'
+                            variant='outlined'
                             color='success'
                             onClick={handleToggle}>
-                            {isExpanded ? 'Kamroq' : 'Ko\'proq'}
-                        </Button>
+                            {isExpanded ? 'Qisqatirish' : 'Batafsil'}
+                        </Button>}
                     </Fade>
                 </div>
+
             </div>
+
         </div>
     );
 }

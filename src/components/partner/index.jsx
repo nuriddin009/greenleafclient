@@ -1,96 +1,103 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './partner.scss';
-import {TextField, Button, Checkbox, FormControlLabel, Typography} from '@mui/material';
+import { Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 import PhoneInput from "react-phone-input-2";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import {Controller, useForm} from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import ReactPlayer from "react-player/youtube";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import instance from "../../utils/instance.js";
+import parse from "html-react-parser";
+import { Bounce } from "react-reveal";
+import {toast} from "react-toastify";
 
 function Index() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [partner, setPartner] = useState(null);
+    const [isChecked, setIsChecked] = useState(false); // New state for checkbox
 
     const {
         register,
         handleSubmit,
         reset,
-        formState: {errors}, control
-    } = useForm()
+        formState: { errors },
+        control
+    } = useForm();
+    const theme = useTheme();
 
+    useEffect(() => {
+        getPartner();
+    }, []);
+
+    const getPartner = () => {
+        instance('/v1/dashboard/partner').then(res => {
+            setPartner(res.data.data);
+        });
+    };
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
     };
 
-
     const submitForm = (data) => {
-        console.log(data)
-    }
+        instance.post('/v1/app', data).then(res => {
+            reset({
+                fullName: '',
+                email: '',
+                description: '',
+                phoneNumber: '998'
+            })
+            // setIsChecked(false)
+            toast.success('Arizangiz qabul qilindi. Siz bilan tez orada bog\'lanamiz')
+            // setTimeout(() => {
+            //     setDisabled(!disabled)
+            // }, 0)
+        })
+    };
+
+    const isMd = useMediaQuery(theme.breakpoints.up('md'));
 
     return (
         <div className='partner' id='partner'>
-            <Typography variant="h4" gutterBottom  sx={{
-                fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
-                textAlign: 'center'
-            }}>
-                Hamkor bo'lish
-            </Typography>
+            <Bounce>
+                <Typography variant="h4" gutterBottom sx={{
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem' },
+                    textAlign: 'center'
+                }}>
+                    Hamkor bo'lish
+                </Typography>
+            </Bounce>
 
             <div className='partner-content'>
                 <div className='content-text'>
-                    <p>
-                        <code>GreenLeaf</code> — yaxshi qo'shimcha daromad olish va sifatli ekoproduktlardan 50%
-                        chegirma bilan foydalanish imkoniyati
-                    </p>
-
-                    <p>GreenLeaf kompaniyasida biznes joyini sotib olayotganda:</p>
-
+                    <Bounce bottom>
+                        {partner?.descriptionP1 ? parse(partner?.descriptionP1) : "Malumotlar yo'q"}
+                    </Bounce>
 
                     {isExpanded && (
                         <div className='additional-info'>
-                            <ul>
-                                <li>Kompaniyaning global bozorni rivojlantirishida ishtirok etasiz.</li>
-                                <li>Minimal sarmoyalar bilan Greenleaf brendi ostida ekologik do'konlar tarmog'ini
-                                    ochish imkoniyatiga ega bo'lasiz.
-                                </li>
-                                <li>Onlayn va oflayn ishlashingiz mumkin</li>
-                            </ul>
+                            {partner?.descriptionP2 ? parse(partner?.descriptionP2) : "Malumotlar yo'q"}
+                            <h5>Batafsil videoda...</h5>
 
-                            <strong>Korxona egalari uchun afzalliklar:</strong>
-                            <ol>
-                                <li>Yirik va ishonchli kompaniya bilan hamkorlik, 20 yildan ortiq bozor tajribasi.</li>
-                                <li>Premium sifatdagi birinchi zaruriyat mahsulotlarining keng assortimenti.</li>
-                                <li>O'rtachilarsiz to'g'ridan-to'g'ri ishlab chiqaruvchi bilan ishlash.</li>
-                                <li>Kamroq boshlang'ich kapital bilan biznesni boshlash imkoniyati.</li>
-                            </ol>
-
-                            <strong>O'ziga mahsulotlarni diler narxida, qo'shimcha narx qo'ymasdan olishni istaganlar
-                                uchun afzalliklar:</strong>
-                            <ol>
-                                <li>O'z oilasi uchun sifatli BIO, EKO mahsulotlar</li>
-                                <li>Oilaviy byudjetni tejash, kompaniya 50% chegirma taqdim etadi</li>
-                                <li>Qo'shimcha daromad olish imkoniyati.</li>
-                            </ol>
-
-                            <b>MLM yetakchilari uchun afzalliklar:</b>
-                            <ul style={{listStyleType: 'square'}}>
-                                <li>Firma ikki xil kirish paketini taklif qiladi</li>
-                                <li>Aralash marketing (Step-Binar + Lineyka)</li>
-                                <li>8 xil daromad tizimi</li>
-                                <li>Kunlik 3 xil bonuslar</li>
-                                <li>Har oyda LTO yo'q</li>
-                                <li>Kvalifikatsiyalarni tasdiqlash shart emas.</li>
-                                <li>Ranglar / sayohatlar / avtomobil bonuslari / uy uchun ballar — yo'qolmaydi.</li>
-                            </ul>
+                            <ReactPlayer
+                                url={partner?.videoLink ? partner?.videoLink : 'https://youtu.be/JqGVrlaSp9I?si=3PKbUxhcHNKOFvBa'}
+                                width={isMd ? '60%' : '100%'}
+                                height="200px"
+                                controls
+                            />
+                            <br />
                         </div>
                     )}
-                    <Button
-                        startIcon={isExpanded ? <ExpandLessIcon/> : <ExpandMoreIcon/>}
-                        sx={{textTransform: 'none'}}
-                        variant='contained'
+                    {partner?.seeMore && <Button
+                        startIcon={isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        sx={{ textTransform: 'none' }}
+                        variant='outlined'
                         color='success'
                         onClick={handleToggle}>
-                        {isExpanded ? 'Kamroq' : 'Ko\'proq'}
-                    </Button>
+                        {isExpanded ? 'Qisqatirish' : 'Batafsil'}
+                    </Button>}
                 </div>
 
                 <form className='content-form' onSubmit={handleSubmit(submitForm)}>
@@ -98,55 +105,77 @@ function Index() {
                         Hamkorlik va franshiza sotib olish uchun ariza yuborish
                     </h6>
                     <div className='form-fields'>
-                        <TextField
-                            label={"To'liq FISH"}
-                            fullWidth
-                            color='success'
-                            {...register('fullName', {required: 'Ushbu qator to\'ldirilishi shart.'})}
-                            error={!!errors.fullName}
-                            helperText={errors.fullName?.message}
-                        />
+                        <Bounce left>
+                            <TextField
+                                label={"To'liq FISH"}
+                                fullWidth
+                                color='success'
+                                {...register('fullName', { required: 'Ushbu qator to\'ldirilishi shart.' })}
+                                error={!!errors.fullName}
+                                helperText={errors.fullName?.message}
+                            />
+                        </Bounce>
 
-                        <TextField
-                            label={'Pochta'}
-                            color='success'
-                            fullWidth
-                            type='email'
-                            {...register('email', {required: 'Ushbu qator to\'ldirilishi shart.'})}
-                            error={!!errors.email}
-                            helperText={errors?.email?.message}
-                        />
+                        <Bounce right>
+                            <TextField
+                                label={'Pochta'}
+                                color='success'
+                                fullWidth
+                                type='email'
+                                {...register('email', { required: 'Ushbu qator to\'ldirilishi shart.' })}
+                                error={!!errors.email}
+                                helperText={errors?.email?.message}
+                            />
+                        </Bounce>
 
-                        <Controller
-                            name="phoneNumber"
-                            control={control}
-                            render={({field: {onChange, value}}) => (
-                                <PhoneInput
-                                    country={"uz"}
-                                    specialLabel={'Telefon raqam'}
-                                    value={value}
-                                    inputStyle={{width: '100%', borderColor: '#4caf50'}}
-                                    onChange={onChange}
-                                    prefix={"+"}
-                                />
-                            )}
-                        />
-                        {errors?.phoneNumber && <p>{errors?.phoneNumber?.message}</p>}
+                        <Bounce>
+                            <Controller
+                                name="phoneNumber"
+                                control={control}
+                                rules={{ required: 'Ushbu qator to\'ldirilishi shart.' }}
+                                render={({ field: { onChange, value } }) => (
+                                    <PhoneInput
+                                        country={"uz"}
+                                        specialLabel={'Telefon raqam'}
+                                        value={value}
+                                        inputStyle={{ width: '100%', borderColor: '#4caf50' }}
+                                        onChange={onChange}
+                                        prefix={"+"}
+                                    />
+                                )}
+                            />
+                        </Bounce>
+                        {errors?.phoneNumber && <span className={'text-danger'}>{errors?.phoneNumber?.message}</span>}
 
-                        <TextField
-                            label={'Mamlakat va yashash manzili'}
-                            fullWidth
-                            multiline
-                            color='success'
-                            rows={5}
-                            {...register('address')}
-                        />
+                        <Bounce bottom>
+                            <TextField
+                                label={'Mamlakat va yashash manzili'}
+                                fullWidth
+                                multiline
+                                color='success'
+                                rows={5}
+                                {...register('description', { required: 'Ushbu qator to\'ldirilishi shart.' })} // Make description required
+                                error={!!errors.description}
+                                helperText={errors.description?.message}
+                            />
+                        </Bounce>
 
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="success"/>}
+                            control={
+                                <Checkbox
+                                    value="remember"
+                                    color="success"
+                                    onChange={(e) => setIsChecked(e.target.checked)} // Update state on change
+                                />
+                            }
                             label="Shaxsiy ma'lumotlarimni qayta ishlashga roziligimni tasdiqlayman"
                         />
-                        <Button type='submit' color='success' variant={'contained'}>
+                        <Button
+                            type='submit'
+                            color='success'
+                            variant={'contained'}
+                            disabled={!isChecked} // Disable button if checkbox is not checked
+                        >
                             {"Hamkor bo'lish"}
                         </Button>
                     </div>

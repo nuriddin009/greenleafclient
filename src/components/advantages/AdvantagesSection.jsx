@@ -8,6 +8,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import DirectionsBoatIcon from '@mui/icons-material/DirectionsBoat';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import HomeIcon from '@mui/icons-material/Home';
+import {Fade} from "react-reveal";
 
 const advantages = [
     {
@@ -54,24 +55,38 @@ const advantages = [
 
 const AdvantagesSection = () => {
     return (
-        <Box sx={{padding: '40px 0', textAlign: 'center'}}>
-            <Typography variant="h4" gutterBottom
-                        sx={{
-                            fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
-                            textAlign: 'center'
-                        }}
-            >
-                GreenLeaf bilan biznesning afzalliklari
-            </Typography>
+        <Box sx={{
+            padding: '40px 0',
+            textAlign: 'center',
+            width: '100%',
+            maxWidth: '95vw'
+        }}>
+            <Fade bottom>
+                <Typography variant="h5" gutterBottom
+                            sx={{
+                                fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
+                                textAlign: 'center'
+                            }}
+                >
+                    GreenLeaf bilan biznesning afzalliklari
+                </Typography>
+            </Fade>
+
             <Grid container spacing={4} justifyContent="center">
                 {advantages.map((item, index) => (
                     <Grid item xs={12} sm={6} md={3} key={index}>
                         <Box>
-                            {item.icon}
-                            <Typography variant="h6" gutterBottom>
-                                {item.title}
-                            </Typography>
-                            <Typography variant="body2">{item.description}</Typography>
+                            <Fade top>
+                                {item.icon}
+                                <Typography variant="h6" gutterBottom>
+                                    {item.title}
+                                </Typography>
+                            </Fade>
+
+                            <Fade bottom>
+                                <Typography variant="body2">{item.description}</Typography>
+                            </Fade>
+
                         </Box>
                     </Grid>
                 ))}

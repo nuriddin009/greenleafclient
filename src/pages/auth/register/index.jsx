@@ -44,7 +44,6 @@ export default function Index() {
         }
         instance.post('/v1/auth/register', obj)
             .then(res => {
-                console.log(res.data)
                 navigate('/')
                 alert("Tabriklaymiz muvaffiqiyatli ro'yxatdan o'tdingiz ✨🎉")
             }).catch(e => {

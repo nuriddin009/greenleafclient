@@ -3,8 +3,10 @@ import parse from "html-react-parser";
 
 function PreviewDialog({open, onClose, image}) {
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Image Preview</DialogTitle>
+        <Dialog open={open} onClose={onClose} style={{
+            minWidth: "500px"
+        }}>
+            <DialogTitle>Rasm</DialogTitle>
             <DialogContent>
                 <img
                     src={image?.attachment?.url}
@@ -12,7 +14,7 @@ function PreviewDialog({open, onClose, image}) {
                     style={{width: '100%', maxHeight: '200px', objectFit: 'contain', marginTop: '10px'}}
                 />
                 <hr/>
-                <Typography>{image?.description? parse(image?.description) : ''}</Typography>
+                <Typography>{image?.description ? parse(image?.description) : ''}</Typography>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary">

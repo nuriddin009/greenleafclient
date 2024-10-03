@@ -8,8 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Typography from '@mui/material/Typography';
 import {Controller, useForm} from 'react-hook-form';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill"; // Import Quill styles
 
 export default function AddImageDialog({addImageDialogOpen, onClose, onAddImage}) {
     const [file, setFile] = useState(null);
@@ -50,7 +50,7 @@ export default function AddImageDialog({addImageDialogOpen, onClose, onAddImage}
             maxWidth="sm"
             fullWidth
         >
-            <DialogTitle>Add New Image</DialogTitle>
+            <DialogTitle>Yangi rasm qo'shish</DialogTitle>
             <DialogContent
                 sx={{
                     display: 'flex',
@@ -85,7 +85,7 @@ export default function AddImageDialog({addImageDialogOpen, onClose, onAddImage}
                     }
                 </label>
                 <Typography variant="body1" sx={{mt: 2}}>
-                    {file ? file.title : 'No file selected'}
+                    {file ? file.title : 'Rasm tanlanmadi'}
                 </Typography>
 
                 {/* Description Editor */}
@@ -104,14 +104,14 @@ export default function AddImageDialog({addImageDialogOpen, onClose, onAddImage}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary">
-                    Cancel
+                    bekor qilish
                 </Button>
                 <Button
                     onClick={handleSubmit(onSubmit)}
                     color="primary"
                     disabled={!file}
                 >
-                    Add Image
+                    Qo'shish
                 </Button>
             </DialogActions>
         </Dialog>
