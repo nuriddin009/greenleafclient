@@ -236,6 +236,7 @@ function Index(props) {
                 id: product?.category?.id, name: product?.category?.name
             }, price: product?.price
         })
+
         setFiles(product?.images?.map(image => ({id: image?.id, url: image?.url})))
     }
 

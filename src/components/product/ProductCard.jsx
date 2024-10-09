@@ -60,7 +60,7 @@ const ProductCard = ({product}) => {
     };
 
     const getDesc = (description) => {
-        const MAX_WORDS = 27;
+        const MAX_WORDS = 5;
         const extractText = (element) => {
             let text = '';
             if (typeof element === 'string') {

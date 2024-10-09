@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
-import {Dialog, DialogContent, IconButton, Box} from '@mui/material';
+import React, { useState } from 'react';
+import {Dialog, DialogContent, IconButton, Box, Typography} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import PlayButton from "../PlayButton/index.jsx";
 
-const YouTubeVideoPlayer = ({videoUrl}) => {
+const YouTubeVideoPlayer = ({ videoUrl ,description}) => {
     const [open, setOpen] = useState(false);
-    const [ripples, setRipples] = useState([]);
 
     const getVideoId = (url) => {
         const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|shorts\/)([^&\n]{11})/;
@@ -15,20 +14,8 @@ const YouTubeVideoPlayer = ({videoUrl}) => {
 
     const videoId = getVideoId(videoUrl);
 
-    const handleClickOpen = (event) => {
-        const newRipple = {
-            x: event.clientX,
-            y: event.clientY,
-            id: Date.now(),
-        };
-
-        setRipples((prev) => [...prev, newRipple]);
+    const handleClickOpen = () => {
         setOpen(true);
-
-        // Remove the ripple after the animation
-        setTimeout(() => {
-            setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
-        }, 600); // Duration matches the animation duration
     };
 
     const handleClose = () => {
@@ -36,13 +23,20 @@ const YouTubeVideoPlayer = ({videoUrl}) => {
     };
 
     return (
-        <Box position="relative" display="inline-block">
+        <Box
+            position="relative"
+            display="inline-block"
+            width="300px"  // Set equal width and height for a perfect circle
+            height="300px"
+            overflow="hidden"
+            borderRadius="50%" // Make it a circle
+        >
             {videoId ? (
                 <>
                     <img
                         src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
                         alt="Video Thumbnail"
-                        style={{width: '100%', height: 'auto', display: 'block'}}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                     <IconButton
                         onClick={handleClickOpen}
@@ -52,30 +46,23 @@ const YouTubeVideoPlayer = ({videoUrl}) => {
                             left: '50%',
                             transform: 'translate(-50%, -50%)',
                             zIndex: 1,
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            // backgroundColor: 'rgba(255, 255, 255, 0.4)',
                             borderRadius: '50%',
                             padding: 2,
-                            overflow: 'hidden',
+                            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.5)',
+                            transition: 'box-shadow 0.3s',
+                            '&:hover': {
+                                boxShadow: '0 6px 20px rgba(0, 0, 0, 0.7)',
+                            },
                         }}
                     >
-                        <PlayCircleOutlineIcon fontSize="large" sx={{
-                            fontSize: '3rem'
-                        }} color="error"/>
+                        <PlayButton />
                     </IconButton>
-                    {ripples.map((ripple) => (
-                        <span
-                            key={ripple.id}
-                            className="ripple circle"
-                            style={{
-                                left: ripple.x - 35, // Centering the ripple
-                                top: ripple.y - 35, // Centering the ripple
-                            }}
-                        />
-                    ))}
                 </>
             ) : (
                 <p>Invalid video URL</p>
             )}
+
             <Dialog onClose={handleClose} open={open} maxWidth="md" fullWidth>
                 <DialogContent>
                     <IconButton
@@ -94,7 +81,7 @@ const YouTubeVideoPlayer = ({videoUrl}) => {
                             },
                         }}
                     >
-                        <CloseIcon sx={{color: 'red'}}/>
+                        <CloseIcon sx={{ color: 'red' }} />
                     </IconButton>
                     {videoId ? (
                         <iframe
@@ -109,6 +96,10 @@ const YouTubeVideoPlayer = ({videoUrl}) => {
                     ) : (
                         <p>Invalid video URL</p>
                     )}
+
+                    <Typography component={'h5'}>
+                        {description}
+                    </Typography>
                 </DialogContent>
             </Dialog>
         </Box>

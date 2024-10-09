@@ -10,7 +10,8 @@ function Index(props) {
 
 
     const onSubmit = (data) => {
-        if (data.newPassword !== data.confirmPassword) {
+
+        if (data.newPassword === data.confirmPassword) {
             instance.post('/v1/user/change_password', data).then(res => {
                 console.log(res.data)
             })

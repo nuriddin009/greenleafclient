@@ -191,6 +191,7 @@ function Index(props) {
                                         <StyledTableCell component="th" scope="row">
                                             <YouTubeVideoPlayer
                                               videoUrl={video?.url}
+                                              description={video?.description}
                                             />
                                         </StyledTableCell>
                                         <StyledTableCell

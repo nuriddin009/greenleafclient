@@ -6,6 +6,7 @@ import PhoneInput from 'react-phone-input-2';
 import instance from "../../utils/instance.js";
 import parse from "html-react-parser";
 import {toast} from "react-toastify";
+import {formatPhoneNumber} from "../../utils/formatters.js";
 
 
 function Index(props) {
@@ -40,20 +41,6 @@ function Index(props) {
             setContact(JSON.parse(res.data.message))
         })
     }
-
-    const formatPhoneNumber = (phoneNumber) => {
-        // Remove all non-numeric characters
-        const cleaned = phoneNumber.replace(/\D/g, '');
-
-        // Match and format the phone number
-        const match = cleaned.match(/^(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})$/);
-
-        if (match) {
-            return `+${match[1]} (${match[2]}) ${match[3]}-${match[4]}-${match[5]}`;
-        }
-
-        return phoneNumber; // Return the original if the pattern doesn't match
-    };
 
 
     return (

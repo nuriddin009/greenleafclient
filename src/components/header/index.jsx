@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../../assets/greenleaf.png';
 import AppBar from '@mui/material/AppBar';
-import { Toolbar } from '@mui/material';
+import {Toolbar} from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,10 +11,10 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { Fade } from "react-reveal";
+import {Fade} from "react-reveal";
 import LoginIcon from '@mui/icons-material/Login';
 import Dropdown from "../dropdown/index.jsx";
-import { useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import BottomMenu from "../BottomMenu/index.jsx";
 import Menudrawer from "../menudrawer/index.jsx";
@@ -49,15 +49,7 @@ function Index() {
     }, []);
 
 
-
-    const handleRemoveProduct = (name) => {
-        setProductName(name);
-        setConfirmationOpen(true);
-    };
-
     const handleConfirmRemove = () => {
-        // Remove product logic
-        // E.g., remove from basket logic goes here
         setConfirmationOpen(false);
     };
 
@@ -69,6 +61,12 @@ function Index() {
     const cartItems = useSelector((state) => state.cart.items);
     const wishlist = useSelector((state) => state.cart.wishlist);
 
+
+    const {pathname} = useLocation()
+
+    useEffect(() => {
+
+    }, [pathname]);
 
     return (
         <>
@@ -90,35 +88,35 @@ function Index() {
                 <Toolbar
                     sx={{
                         display: 'flex',
-                        flexDirection: { xs: 'column', md: 'row' },
-                        justifyContent: { xs: 'center', md: 'space-between' },
+                        flexDirection: {xs: 'column', md: 'row'},
+                        justifyContent: {xs: 'center', md: 'space-between'},
                         alignItems: 'center',
                         flexWrap: 'wrap',
-                        padding: { xs: '8px', sm: '16px' },
+                        padding: {xs: '8px', sm: '16px'},
                         width: '100%',
                         boxSizing: 'border-box',
                     }}
                 >
                     {/* Logo */}
                     <Box display="flex" alignItems="center" justifyContent="space-between"
-                         sx={{ width: { xs: '100%', md: 'auto' }, p: 2 }}>
-                        <IconButton sx={{ p: 0 }} href={'/'}>
-                            <img src={logo} alt="Logo" style={{ height: 40 }} />
+                         sx={{width: {xs: '100%', md: 'auto'}, p: 2}}>
+                        <IconButton sx={{p: 0}} href={'/'}>
+                            <img src={logo} alt="Logo" style={{height: 40}}/>
                         </IconButton>
-                        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                        <Box sx={{display: {xs: 'flex', md: 'none'}}}>
                             <MenuIcon
                                 onClick={() => setOpen(!open)}
-                                sx={{ transform: 'scale(1.2)' }}
+                                sx={{transform: 'scale(1.2)'}}
                                 color="success"
                             />
                         </Box>
                     </Box>
 
-                    <Menudrawer open={open} setOpen={setOpen} />
+                    <Menudrawer open={open} setOpen={setOpen}/>
 
                     {/* Dropdown and Search Bar for Larger Screens */}
                     <Box
-                        display={{ xs: 'none', md: 'flex' }}
+                        display={{xs: 'none', md: 'flex'}}
                         alignItems="center"
                         justifyContent="center"
                         sx={{
@@ -128,11 +126,11 @@ function Index() {
                         }}
                     >
 
-                        <Dropdown />
+                        <Dropdown/>
                         <Box sx={{
                             flexGrow: 1,
                         }}>
-                            <SearchWithDropdown />
+                            <SearchWithDropdown/>
                         </Box>
                     </Box>
 
@@ -143,10 +141,10 @@ function Index() {
                         justifyContent="center"
                         gap="16px"
                         sx={{
-                            display: { xs: 'none', md: 'flex' },
+                            display: {xs: 'none', md: 'flex'},
                             flexShrink: 0,
-                            marginTop: { xs: '8px', md: 0 },
-                            width: { xs: '100%', md: 'auto' },
+                            marginTop: {xs: '8px', md: 0},
+                            width: {xs: '100%', md: 'auto'},
                             boxSizing: 'border-box',
                             overflowX: 'hidden',
                             flexDirection: 'row',
@@ -155,13 +153,13 @@ function Index() {
                     >
                         {localStorage.getItem('access_token') ? (
                             <Button
-                                startIcon={<AccountCircleIcon />}
+                                startIcon={<AccountCircleIcon/>}
                                 onClick={() => navigate('/cabinet')}
                                 color="inherit"
                                 sx={{
                                     textTransform: 'none',
                                     height: '40px',
-                                    fontSize: { xs: '12px', sm: '14px', md: '16px' },
+                                    fontSize: {xs: '12px', sm: '14px', md: '16px'},
                                     width: '100%',
                                 }}
                             >
@@ -169,13 +167,13 @@ function Index() {
                             </Button>
                         ) : (
                             <Button
-                                startIcon={<LoginIcon />}
+                                startIcon={<LoginIcon/>}
                                 onClick={() => navigate('/auth/login')}
                                 color="inherit"
                                 sx={{
                                     textTransform: 'none',
                                     height: '40px',
-                                    fontSize: { xs: '12px', sm: '14px', md: '16px' },
+                                    fontSize: {xs: '12px', sm: '14px', md: '16px'},
                                     width: '100%',
                                 }}
                             >
@@ -189,7 +187,7 @@ function Index() {
                             sx={{
                                 textTransform: 'none',
                                 height: '44px',
-                                fontSize: { xs: '12px', sm: '14px', md: '16px' },
+                                fontSize: {xs: '12px', sm: '14px', md: '16px'},
                                 position: 'relative',
                             }}
                         >
@@ -202,7 +200,7 @@ function Index() {
                                     },
                                 }}
                             >
-                                <FavoriteBorderIcon />
+                                <FavoriteBorderIcon/>
                             </Badge>
                         </Button>
 
@@ -212,7 +210,7 @@ function Index() {
                             sx={{
                                 textTransform: 'none',
                                 height: '43px',
-                                fontSize: { xs: '12px', sm: '14px', md: '16px' },
+                                fontSize: {xs: '12px', sm: '14px', md: '16px'},
                                 position: 'relative',
                             }}
                         >
@@ -225,7 +223,7 @@ function Index() {
                                     },
                                 }}
                             >
-                                <ShoppingCartIcon />
+                                <ShoppingCartIcon/>
                             </Badge>
                         </Button>
                     </Box>
@@ -233,13 +231,13 @@ function Index() {
             </AppBar>
 
             {/* Adjust content for fixed header */}
-            <Box sx={{ height: '64px', width: '100%' }} /> {/* Spacer to prevent content overlap */}
+            <Box sx={{height: '64px', width: '100%'}}/> {/* Spacer to prevent content overlap */}
 
             {/* Mobile Search Input */}
             <Fade bottom>
                 <Box
                     sx={{
-                        display: { xs: 'flex', md: 'none' },
+                        display: {xs: 'flex', md: 'none'},
                         width: '100%',
                         padding: '8px 10px',
                         alignItems: 'center',
@@ -259,38 +257,41 @@ function Index() {
                             borderRadius: '4px',
                         }}
                         InputProps={{
-                            sx: { height: '40px' },
+                            sx: {height: '40px'},
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <IconButton>
-                                        <SearchIcon color="success" />
+                                        <SearchIcon color="success"/>
                                     </IconButton>
                                 </InputAdornment>
                             ),
                         }}
                     />
-                    <Button
-                        color="inherit"
-                        onClick={() => navigate('/wishlist')}
-                        sx={{
-                            textTransform: 'none',
-                            height: '44px',
-                            fontSize: { xs: '12px', sm: '14px', md: '16px' },
-                            position: 'relative',
-                        }}
-                    >
-                        <Badge
-                            badgeContent={wishlist.length}
-                            color="error"
+                    {
+                        pathname !== '/wishlist' && <Button
+                            color="inherit"
+                            onClick={() => navigate('/wishlist')}
                             sx={{
-                                '& .MuiBadge-dot': {
-                                    borderRadius: '50%',
-                                },
+                                textTransform: 'none',
+                                height: '44px',
+                                fontSize: {xs: '12px', sm: '14px', md: '16px'},
+                                position: 'relative',
                             }}
                         >
-                            <FavoriteBorderIcon />
-                        </Badge>
-                    </Button>
+                            <Badge
+                                badgeContent={wishlist.length}
+                                color="error"
+                                sx={{
+                                    '& .MuiBadge-dot': {
+                                        borderRadius: '50%',
+                                    },
+                                }}
+                            >
+                                <FavoriteBorderIcon/>
+                            </Badge>
+                        </Button>
+                    }
+
 
                 </Box>
             </Fade>

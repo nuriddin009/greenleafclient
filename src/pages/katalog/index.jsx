@@ -1,35 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     Box,
+    ButtonBase,
+    Divider,
+    IconButton,
+    InputAdornment,
     List,
     ListItem,
     ListItemText,
-    Divider,
-    TextField,
-    InputAdornment,
-    IconButton,
-    ButtonBase
+    TextField
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
-import instance from "../../utils/instance.js";
 import BottomMenu from "../../components/BottomMenu/index.jsx";
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const Index = () => {
-    const [categories, setCategories] = useState([]);
 
-    // Fetch categories from the API
-    useEffect(() => {
-        getCategories();
-    }, []);
+    const categories = useSelector((state) => state.category.categories);
 
-    const getCategories = () => {
-        instance('/v1/category').then(res => {
-            setCategories(res.data.elements);
-        });
-    };
+    const navigate = useNavigate()
 
     return (
-        <Box sx={{width: '100%',  paddingTop: '70px', boxSizing: 'border-box'}}>
+        <Box sx={{width: '100%', paddingTop: '70px', boxSizing: 'border-box'}}>
             <Box
                 sx={{
                     display: 'flex',
@@ -57,11 +50,11 @@ const Index = () => {
                         borderRadius: '4px',
                     }}
                     InputProps={{
-                        sx: { height: '40px' },
+                        sx: {height: '40px'},
                         startAdornment: (
                             <InputAdornment position="start">
                                 <IconButton>
-                                    <SearchIcon color="success" />
+                                    <SearchIcon color="success"/>
                                 </IconButton>
                             </InputAdornment>
                         ),
@@ -73,7 +66,8 @@ const Index = () => {
                 <List>
                     {categories.map((category) => (
                         <React.Fragment key={category?.id}>
-                            <ListItem component={ButtonBase} button>
+                            <ListItem component={ButtonBase} button
+                                      onClick={() => navigate(`/category/${category?.id}`)}>
                                 <img src={category?.image} width={25} height={25} alt={category?.name}/>&nbsp;&nbsp;
                                 <ListItemText primary={category?.name}/>
                                 <ListItemText primary="→" sx={{textAlign: 'right', color: '#9e9e9e'}}/>
@@ -83,48 +77,7 @@ const Index = () => {
                     ))}
                 </List>
             </Box>
-   <Box sx={{}}> {/* Adjusted marginTop to prevent overlap */}
-                <List>
-                    {categories.map((category) => (
-                        <React.Fragment key={category?.id}>
-                            <ListItem component={ButtonBase} button>
-                                <img src={category?.image} width={25} height={25} alt={category?.name}/>&nbsp;&nbsp;
-                                <ListItemText primary={category?.name}/>
-                                <ListItemText primary="→" sx={{textAlign: 'right', color: '#9e9e9e'}}/>
-                            </ListItem>
-                            <Divider/>
-                        </React.Fragment>
-                    ))}
-                </List>
-            </Box>
-   <Box sx={{}}> {/* Adjusted marginTop to prevent overlap */}
-                <List>
-                    {categories.map((category) => (
-                        <React.Fragment key={category?.id}>
-                            <ListItem component={ButtonBase} button>
-                                <img src={category?.image} width={25} height={25} alt={category?.name}/>&nbsp;&nbsp;
-                                <ListItemText primary={category?.name}/>
-                                <ListItemText primary="→" sx={{textAlign: 'right', color: '#9e9e9e'}}/>
-                            </ListItem>
-                            <Divider/>
-                        </React.Fragment>
-                    ))}
-                </List>
-            </Box>
-   <Box sx={{}}> {/* Adjusted marginTop to prevent overlap */}
-                <List>
-                    {categories.map((category) => (
-                        <React.Fragment key={category?.id}>
-                            <ListItem component={ButtonBase} button>
-                                <img src={category?.image} width={25} height={25} alt={category?.name}/>&nbsp;&nbsp;
-                                <ListItemText primary={category?.name}/>
-                                <ListItemText primary="→" sx={{textAlign: 'right', color: '#9e9e9e'}}/>
-                            </ListItem>
-                            <Divider/>
-                        </React.Fragment>
-                    ))}
-                </List>
-            </Box>
+
 
             <br/><br/><br/>
             <BottomMenu/>

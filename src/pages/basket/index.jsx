@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, Card, CardContent, Divider, Grid, IconButton, TextField, Typography} from '@mui/material';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Checkbox,
+    Divider,
+    Grid,
+    IconButton,
+    TextField,
+    Typography
+} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
@@ -8,7 +19,11 @@ import {useNavigate} from "react-router-dom";
 import parse from "html-react-parser";
 import EmptyBasket from "./EmptyBasket.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {changeQuantity, removeFromCart} from "../../features/cartSlice.js"; // Updated import for remove
+import {changeQuantity, removeFromCart} from "../../features/cartSlice.js";
+import HomeIcon from "@mui/icons-material/Home";
+import ReplyIcon from "@mui/icons-material/Reply";
+import Header from "../../components/header/index.jsx";
+
 
 const Index = () => {
     const [code, setCode] = useState('');
@@ -24,7 +39,7 @@ const Index = () => {
     };
 
     const getDesc = (x) => {
-        const MAX_WORDS = 27;
+        const MAX_WORDS = 10;
         const extractText = (element) => {
             let text = '';
             if (typeof element === 'string') {
@@ -53,6 +68,7 @@ const Index = () => {
 
     return (
         <>
+            <Header/>
             <Box sx={{
                 width: '100%', // Full width by default
                 maxWidth: {xs: '100%', md: '100%'}, // Full width on all screen sizes
@@ -64,17 +80,35 @@ const Index = () => {
                 <Grid container spacing={4}>
                     {/* Cart Items Section */}
                     <Grid item xs={12} md={8}>
-                        {cart.length > 0 && <Typography variant="h4" gutterBottom align="center">
-                            Savat
-                        </Typography>}
+                        {cart.length > 0 && <div className={'d-flex align-items-center'}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => navigate(-1)}
+                                startIcon={<ReplyIcon/>}
+                                sx={{margin: "20px 0", display: {xs: 'none', md: 'flex'}}}
+                            >
+                                Orqaga
+                            </Button>
+
+                            <Typography variant="h4" gutterBottom align="center" margin={'0 auto'}>
+                                Savat
+                            </Typography></div>}
+
 
                         {cart.length > 0 && (
                             cart.map((product) => (
                                 <Card key={product.id} sx={{mb: 2, p: 2, borderRadius: '12px', boxShadow: 3}}>
                                     <Grid container alignItems="center" spacing={2}>
-                                        <Grid item xs={12} sm={1} display={'flex'} justifyContent={'end'} sx={{
-                                            display: {sm: 'none', xs: 'flex'}
-                                        }}>
+
+                                        <Grid item xs={12} sm={1} display={'flex'} justifyContent={'space-between'}
+                                              sx={{
+                                                  display: {sm: 'none', xs: 'flex'}
+                                              }}>
+                                            {/*<Checkbox*/}
+                                            {/*    sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}*/}
+                                            {/*    color='success'*/}
+                                            {/*/>*/}
                                             <IconButton
                                                 onClick={() => dispatch(removeFromCart(product.id))} // Dispatch remove
                                                 sx={{color: 'error.main'}}>
@@ -93,17 +127,28 @@ const Index = () => {
                                                 <img
                                                     src={product?.images[0]?.url}
                                                     alt={product?.name}
-                                                    style={{width: '100%', transition: 'transform 0.3s ease'}}
+                                                    style={{
+                                                        width: '100%',
+                                                        transition: 'transform 0.3s ease',
+                                                        cursor: 'pointer'
+                                                    }}
+                                                    onClick={() => navigate(`/product/${product.id}`)}
                                                 />
                                             </Box>
                                         </Grid>
 
 
                                         <Grid item xs={4} sm={4}>
-                                            <Typography variant="h6" sx={{fontWeight: '500'}}>
+                                            <Typography variant="h6" sx={{fontWeight: '500', cursor: 'pointer'}}
+                                                        onClick={() => navigate(`/product/${product.id}`)}>
                                                 {product?.name}
                                             </Typography>
-                                            <Typography variant="body2" color="textSecondary">
+                                            <Typography variant="body2" color="textSecondary"
+                                                        onClick={() => navigate(`/product/${product.id}`)}
+                                                        sx={{
+                                                            wordBreak: 'break-all',
+                                                            cursor: 'pointer'
+                                                        }}>
                                                 {product?.description ? getDesc(product?.description) : 'Product description here.'}
                                             </Typography>
                                         </Grid>
@@ -246,6 +291,7 @@ const Index = () => {
                         </Button>
                     </Box>
                 )}
+
 
                 <br/><br/>
             </Box>

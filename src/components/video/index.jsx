@@ -37,7 +37,10 @@ function Index(props) {
 
 
     return (
-        <div>
+        <div style={{
+            maxWidth: '1300px',
+            margin: '0 auto'
+        }}>
             <Typography
                 variant="h4"
                 gutterBottom
@@ -54,7 +57,7 @@ function Index(props) {
                     {videos.slice(0, getVisibleItems()).map((video, index) => (
                         <Grid item xs={12} sm={6} md={4} key={index}>
                             <Box display="flex" justifyContent="center">
-                                <YouTubeVideoPlayer videoUrl={video?.url}/>
+                                <YouTubeVideoPlayer videoUrl={video?.url} description={video?.description}/>
                             </Box>
                         </Grid>
                     ))}

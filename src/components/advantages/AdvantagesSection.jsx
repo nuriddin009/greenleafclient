@@ -59,7 +59,8 @@ const AdvantagesSection = () => {
             padding: '40px 0',
             textAlign: 'center',
             width: '100%',
-            maxWidth: '95vw'
+            maxWidth: '1300px',
+            margin: '0 auto'
         }}>
             <Fade bottom>
                 <Typography variant="h5" gutterBottom

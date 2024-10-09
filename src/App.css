@@ -19,3 +19,59 @@
 .bounce {
     animation: bounce 0.6s;
 }
+
+
+/* Navigation buttons */
+/* Base styles for navigation buttons */
+.swiper-button-next,
+.swiper-button-prev {
+    width: 40px; /* Width of the button */
+    height: 40px; /* Height of the button */
+    border-radius: 50%; /* Makes the button circular */
+    background-color: #4caf50; /* Background color for the button */
+    color: white; /* Color of the icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Ensure buttons are on top */
+}
+
+/* Navigation button icons */
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 20px; /* Size of the icon */
+    color: white; /* Color of the icon */
+}
+
+/* Optional: Change color on hover */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: #388e3c; /* Darker background color on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 35px; /* Smaller width for smaller screens */
+        height: 35px; /* Smaller height for smaller screens */
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 18px; /* Smaller icon size for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 30px; /* Further reduce size for very small screens */
+        height: 30px; /* Further reduce size for very small screens */
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 16px; /* Further reduce icon size for very small screens */
+    }
+}

@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
     Box,
     Button,
+    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
@@ -16,16 +17,16 @@ import {
     TableRow,
     Typography,
 } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BottomMenu from "../../components/BottomMenu/index.jsx";
-import HomeIcon from "@mui/icons-material/Home";
 import {useNavigate} from "react-router-dom";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import parse from "html-react-parser";
 import EmptyWishlist from "./EmptyWishlist.jsx";
 import {useDispatch, useSelector} from "react-redux";
-import {addToCart, toggleFavorite} from "../../features/cartSlice.js";
+import {addToCart, removeFromCart, toggleFavorite} from "../../features/cartSlice.js";
+import Header from "../../components/header/index.jsx";
+import ReplyIcon from '@mui/icons-material/Reply';
 
 const Index = () => {
     const dispatch = useDispatch();
@@ -58,7 +59,7 @@ const Index = () => {
 
 
     const handleBuyNowClick = () => {
-        wishlistItems.forEach(item => dispatch(addToCart(item)));r
+        wishlistItems.forEach(item => dispatch(addToCart(item)));
     };
 
     const getDesc = (x) => {
@@ -91,184 +92,241 @@ const Index = () => {
 
     const navigate = useNavigate()
 
-    return (
-        <Box sx={{padding: {xs: '10px', sm: '20px'}}}>
-            {
-                wishlistItems.length > 0 &&
-                <Typography variant="h4" gutterBottom>
-                    Sevimlilar ro‘yxati
-                </Typography>
+    function addCartOrRemove(item) {
+        if (hasInCart(item.id)) {
+            if (window.confirm(`${item.name}ni savatdan o'chirmoqchimisiz?`)) {
+                dispatch(removeFromCart(item.id))
             }
+        } else {
+            if (window.confirm(`${item.name}ni savatga qo'shmoqchimisiz?`)) {
+                dispatch(addToCart(item))
+            }
+        }
+    }
+
+    return (
+        <>
+            <Header/>
+            <Box sx={{padding: {xs: '10px', sm: '20px'}}}>
+                {
+                    wishlistItems.length > 0 &&
+                    <Typography variant="h5" gutterBottom mt={5}>
+                        Sevimlilar ro‘yxati
+                    </Typography>
+                }
 
 
-            {wishlistItems.length === 0 && <EmptyWishlist/>}
+                {wishlistItems.length === 0 && <EmptyWishlist/>}
 
 
-            {/* Desktop ko'rinishi */}
-            {wishlistItems.length > 0 && <TableContainer sx={{display: {xs: 'none', md: 'block'}}}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Mahsulot</TableCell>
-                            <TableCell>Qo'shilgan sana</TableCell>
-                            <TableCell>Narxi</TableCell>
-                            {/*<TableCell>Miqdor</TableCell>*/}
-                            <TableCell>Omborda</TableCell>
-                            <TableCell>O'chirish</TableCell>
-                            <TableCell>Savat</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {wishlistItems.map((item) => (
-                            <TableRow key={item?.id}>
+                {/* Desktop ko'rinishi */}
+                {wishlistItems.length > 0 && <TableContainer sx={{display: {xs: 'none', md: 'block'}}}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
                                 <TableCell>
-                                    <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                        <img
-                                            src={item?.images[0]?.url}
-                                            alt={item?.name}
-                                            style={{width: '50px', height: '50px', marginRight: '10px'}}
-                                        />
-                                        <Box>
-                                            <Typography variant="body1">{item?.name}</Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                {item?.description ? getDesc(item?.description)
-                                                    : 'Product description here.'}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
+                                    <Checkbox
+                                        sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                                    />
                                 </TableCell>
-                                <TableCell>28 mart, 2019</TableCell>
-                                <TableCell>{item?.price?.toLocaleString()} UZS</TableCell>
-                                <TableCell>Omborda mavjud</TableCell>
-                                <TableCell>
-                                    <IconButton onClick={() => handleDeleteClick(item)} sx={{color: 'error.main'}}>
-                                        <HighlightOffIcon fontSize="large"/>
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell>
-                                    <IconButton aria-label="savatga qo'shish">
-                                        <ShoppingCartIcon color={`${hasInCart(item.id) ? 'primary' : 'action'}`}/>
-                                    </IconButton>
-                                </TableCell>
+                                <TableCell>Mahsulot</TableCell>
+                                <TableCell>Qo'shilgan sana</TableCell>
+                                <TableCell>Narxi</TableCell>
+                                <TableCell>Omborda</TableCell>
+                                <TableCell>O'chirish</TableCell>
+                                <TableCell>Savat</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>}
+                        </TableHead>
+                        <TableBody>
+                            {wishlistItems.map((item) => (
+                                <TableRow key={item?.id}>
+                                    <TableCell>
+                                        <Checkbox
+                                            sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Box sx={{display: 'flex', alignItems: 'center'}}>
+                                            <img
+                                                src={item?.images[0]?.url}
+                                                alt={item?.name}
+                                                style={{
+                                                    width: '50px',
+                                                    height: '50px',
+                                                    marginRight: '10px',
+                                                    cursor: 'pointer'
+                                                }}
+                                                onClick={() => navigate(`/product/${item.id}`)}
+                                            />
+                                            <Box>
+                                                <Typography
+                                                    variant="body1"
+                                                    onClick={() => navigate(`/product/${item.id}`)}
+                                                >{item?.name}</Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="text.secondary"
+                                                    onClick={() => navigate(`/product/${item.id}`)}
+                                                >
+                                                    {item?.description ? getDesc(item?.description)
+                                                        : 'Product description here.'}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </TableCell>
+                                    <TableCell>28 mart, 2019</TableCell>
+                                    <TableCell>{item?.price?.toLocaleString()} UZS</TableCell>
+                                    <TableCell>Omborda mavjud</TableCell>
+                                    <TableCell>
+                                        <IconButton onClick={() => handleDeleteClick(item)} sx={{color: 'error.main'}}>
+                                            <HighlightOffIcon fontSize="large"/>
+                                        </IconButton>
+                                    </TableCell>
+                                    <TableCell>
+                                        <IconButton aria-label="savatga qo'shish">
+                                            <ShoppingCartIcon
+                                                onClick={() => addCartOrRemove(item)}
+                                                color={`${hasInCart(item.id) ? 'primary' : 'action'}`}/>
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>}
 
-            {/* Mobil ko'rinishi */}
-            <Box
-                sx={{
-                    display: {xs: 'block', md: 'none'},
-                    flexDirection: 'column',
-                    gap: '20px',
-                }}
-            >
-                {wishlistItems.map((item) => (
-                    <Box
-                        key={item?.id}
-                        sx={{
-                            position: 'relative',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            padding: '15px',
-                            border: '1px solid #ddd',
-                            borderRadius: '8px',
-                        }}
-                    >
-                        <IconButton
-                            onClick={() => handleDeleteClick(item)}
+                {/* Mobil ko'rinishi */}
+                <Box
+                    sx={{
+                        display: {xs: 'block', md: 'none'},
+                        flexDirection: 'column',
+                        gap: '20px',
+                    }}
+                >
+                    {wishlistItems.map((item) => (
+                        <Box
+                            key={item?.id}
                             sx={{
-                                position: 'absolute',
-                                top: '10px',
-                                right: '10px',
-                                color: 'error.main',
+                                position: 'relative',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                padding: '15px',
+                                border: '1px solid #ddd',
+                                borderRadius: '8px',
+                                mt: 1
                             }}
                         >
-                            <HighlightOffIcon fontSize="large"/>
-                        </IconButton>
-                        <Box sx={{display: 'flex', alignItems: 'center'}}>
-                            <img
-                                src={item?.images[0]?.url}
-                                alt={item?.name}
-                                style={{width: '80px', height: '80px', marginRight: '15px'}}
-                            />
+
                             <Box>
-                                <Typography variant="body1">{item?.name}</Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {item?.description ? getDesc(item?.description)
-                                        : 'Product description here.'}
-                                </Typography>
+                                <Checkbox
+                                    sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                                />
                             </Box>
-                        </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between', marginTop: '15px'}}>
-                            <Typography>{item?.price?.toLocaleString()} so'm</Typography>
-                            <Typography>Omborda mavjud</Typography>
-                        </Box>
-                        <Box sx={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'end',
-                            mt: 2
-                        }}>
                             <IconButton
-                                aria-label="savatga qo'shish"
+                                onClick={() => handleDeleteClick(item)}
                                 sx={{
-                                    color: 'action.main',
+                                    position: 'absolute',
+                                    top: '10px',
+                                    right: '10px',
+                                    color: 'error.main',
                                 }}
                             >
-                                <ShoppingCartIcon size='large'/>
+                                <HighlightOffIcon fontSize="large"/>
                             </IconButton>
+
+
+                            <Box sx={{display: 'flex', alignItems: 'center'}}>
+
+                                <img
+                                    src={item?.images[0]?.url}
+                                    alt={item?.name}
+                                    style={{width: '80px', height: '80px', marginRight: '15px', cursor: 'pointer'}}
+                                    onClick={() => navigate(`/product/${item.id}`)}
+                                />
+                                <Box>
+                                    <Typography variant="body1"
+                                                onClick={() => navigate(`/product/${item.id}`)}
+                                    >{item?.name}</Typography>
+                                    <Typography variant="body2" color="text.secondary"
+                                                onClick={() => navigate(`/product/${item.id}`)}>
+                                        {item?.description ? getDesc(item?.description)
+                                            : 'Product description here.'}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box sx={{display: 'flex', justifyContent: 'space-between', marginTop: '15px'}}>
+                                <Typography>{item?.price?.toLocaleString()} so'm</Typography>
+                                <Typography>Omborda mavjud</Typography>
+                            </Box>
+                            <Box sx={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'end',
+                                mt: 2
+                            }}>
+                                <IconButton
+                                    aria-label="savatga qo'shish"
+                                    sx={{
+                                        color: 'action.main',
+                                    }}
+                                >
+                                    <ShoppingCartIcon
+                                        size='large'
+                                        color={`${hasInCart(item.id) ? 'primary' : 'action'}`}
+                                        onClick={() => addCartOrRemove(item)}
+                                    />
+                                </IconButton>
+                            </Box>
                         </Box>
-                    </Box>
-                ))}
+                    ))}
+                </Box>
+
+                {/* Hammasini savatga qo'shish tugmasi */}
+                {wishlistItems.length > 0 && < Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleBuyNowClick}
+                    startIcon={<ShoppingCartIcon/>}
+                    sx={{marginTop: '20px'}}
+                >
+                    Hammasini savatga qo'shish
+                </Button>
+                }
+
+                {wishlistItems.length > 0 && <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => navigate(-1)}
+                    startIcon={<ReplyIcon/>}
+                    sx={{marginTop: '20px', display: {xs: 'none', md: 'flex'}}}
+                >
+                    orqaga
+                </Button>}
+
+
+                {/* Tasdiqlash dialogi */}
+                <Dialog open={confirmOpen} onClose={handleCancelDelete}>
+                    <DialogTitle>O'chirishni tasdiqlash</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            <strong>{itemToDelete?.name}</strong> ni sevimlilar ro‘yxatidan o‘chirishni istaysizmi?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCancelDelete} color="primary">
+                            Bekor qilish
+                        </Button>
+                        <Button onClick={handleConfirmDelete} color="secondary">
+                            O'chirish
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <br/><br/><br/><br/>
+
+                <BottomMenu/>
             </Box>
-
-            {/* Hammasini savatga qo'shish tugmasi */}
-            {wishlistItems.length > 0 && < Button
-                variant="contained"
-                color="primary"
-                onClick={handleBuyNowClick}
-                startIcon={<ShoppingCartIcon/>}
-                sx={{marginTop: '20px'}}
-            >
-                Hammasini savatga qo'shish
-            </Button>
-            }
-
-            {wishlistItems.length > 0 && <Button
-                variant="contained"
-                color="success"
-                onClick={() => navigate('/')}
-                startIcon={<HomeIcon/>}
-                sx={{marginTop: '20px', display: {xs: 'none', md: 'flex'}}}
-            >
-                Bosh sahifaga chiqish
-            </Button>}
-
-
-            {/* Tasdiqlash dialogi */}
-            <Dialog open={confirmOpen} onClose={handleCancelDelete}>
-                <DialogTitle>O'chirishni tasdiqlash</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        <strong>{itemToDelete?.name}</strong> ni sevimlilar ro‘yxatidan o‘chirishni istaysizmi?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancelDelete} color="primary">
-                        Bekor qilish
-                    </Button>
-                    <Button onClick={handleConfirmDelete} color="secondary">
-                        O'chirish
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            <br/><br/><br/><br/>
-
-            <BottomMenu/>
-        </Box>
+        </>
     );
 };
 

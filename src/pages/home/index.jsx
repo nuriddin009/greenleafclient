@@ -23,7 +23,7 @@ import instance from "../../utils/instance.js";
 import Video from "../../components/video/index.jsx";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SuggestionProducts from "../../components/product/SuggestionProducts.jsx";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setMenuOpen} from '../../features/categorySlice';
 
 const itemData = [
@@ -42,19 +42,13 @@ const itemData = [
 ];
 
 function Index() {
-    // Ensure images are loaded correctly
+
     const handleImageError = (event) => {
         event.target.src = 'default-image-path.png'; // Fallback image path if image fails to load
     };
     const theme = useTheme()
 
     const isMd = useMediaQuery(theme.breakpoints.up('md'));
-
-    const {pathname} = useLocation()
-
-    useEffect(() => {
-
-    }, [pathname]);
 
     const [scroll, setScroll] = useState(false);
 
@@ -73,20 +67,14 @@ function Index() {
     }, []);
 
     const [slideImages, setSlideImages] = useState([])
-    const [categories, setCategories] = useState([]);
+
 
 
     useEffect(() => {
         getSlider()
-        getCategories();
     }, []);
 
-
-    const getCategories = () => {
-        instance('/v1/category').then(res => {
-            setCategories(res.data.elements);
-        });
-    };
+    const categories = useSelector((state) => state.category.categories);
 
 
     const getSlider = () => {

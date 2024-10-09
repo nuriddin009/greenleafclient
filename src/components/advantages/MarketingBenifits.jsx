@@ -30,9 +30,14 @@ const features = [
 
 const MarketingBenefits = () => {
     return (
-        <Box sx={{padding: '40px 0', textAlign: 'center'}}>
+        <Box sx={{
+            padding: '40px 0',
+            textAlign: 'center',
+            maxWidth: '1300px',
+            margin: '0 auto'
+        }}>
             <Typography variant="h4" gutterBottom sx={{
-                fontSize: {xs: '1.5rem', sm: '2rem', md: '2.5rem', lg: '3rem'},
+                fontSize: {xs: '1.3rem', sm: '1.7rem', md: '2rem', lg: '3rem'},
                 textAlign: 'center'
             }}>
                 Nega GreenLeaf marketingi hamkorlar uchun foydali?

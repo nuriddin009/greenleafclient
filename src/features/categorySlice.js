@@ -12,8 +12,8 @@ const categorySlice = createSlice({
     initialState: {
         categories: [],
         isMenuOpen: false,
-        status: 'idle', // Tracks loading status
-        error: null, // Handles errors
+        status: 'idle',
+        error: null,
     },
     reducers: {
         setMenuOpen: (state) => {
@@ -39,7 +39,6 @@ const categorySlice = createSlice({
     },
 });
 
-// Export the actions to be used in the component
 export const { setMenuOpen, closeMenu } = categorySlice.actions;
 
 // Export the reducer to be added to the store

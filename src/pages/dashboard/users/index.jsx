@@ -35,6 +35,7 @@ import {Controller, useForm} from "react-hook-form";
 import PasswordInput from "../../../components/passwordInput/index.jsx";
 import {toast} from "react-toastify";
 import EmptyTableData from "../../../components/emptydata/EmptyTableData.jsx";
+import {formatPhoneNumber} from "../../../utils/formatters.js";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -281,7 +282,7 @@ function Index(props) {
                                     {index + 1}
                                 </StyledTableCell>
                                 <StyledTableCell align="right">{user?.firstname} {user?.lastname}</StyledTableCell>
-                                <StyledTableCell align="right">{user?.phoneNumber}</StyledTableCell>
+                                <StyledTableCell align="right">{formatPhoneNumber(user?.phoneNumber)}</StyledTableCell>
 
                                 <StyledTableCell align="right">
                                     {user?.status === 'ACTIVE' ?

@@ -5,15 +5,15 @@ import instance from '../../utils/instance';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {useNavigate} from "react-router-dom";
 
-function SuggestionProducts() {
+function SuggestionProducts({categoryId}) {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
         getProducts();
-    }, []);
+    }, [categoryId]);
 
     const getProducts = () => {
-        instance('/v1/product').then(res => {
+        instance('/v1/product', {params: {categoryId}}).then(res => {
             setProducts(res.data.elements);
         });
     };
@@ -70,21 +70,23 @@ function SuggestionProducts() {
                 ))}
             </Box>
 
-            <Button
-                sx={{
-                    display: 'block',
-                    width: '50%',
-                    mt: 2,
-                    ml: 'auto',
-                    mr: 'auto',
-                    height: {md: '50px', xs: '40px'},
-                }}
-                color="success"
-                variant="outlined"
-                onClick={() => navigate('/suggestion')}
-            >
-                Yana ko'rsatish
-            </Button>
+            {
+                !categoryId && <Button
+                    sx={{
+                        display: 'block',
+                        width: '50%',
+                        mt: 2,
+                        ml: 'auto',
+                        mr: 'auto',
+                        height: {md: '50px', xs: '40px'},
+                    }}
+                    color="success"
+                    variant="outlined"
+                    onClick={() => navigate('/suggestion')}
+                >
+                    Yana ko'rsatish
+                </Button>
+            }
         </Box>
     );
 }
